@@ -1,0 +1,23 @@
+﻿@model List<UserModel>
+
+@if (ViewBag.SuccessMessage != null)
+{
+    <script>
+        alert('@ViewBag.SuccessMessage');
+    </script>
+}
+
+@{
+    ViewData["Title"] = "About";
+}
+
+<h1> About </h1>
+<p> We are very handsome :)</p>
+<h2> Members (@Model.Count): </h2>
+
+@{
+    foreach(UserModel u in Model)
+    {
+        <li>@u.Name</li>
+    }
+}
