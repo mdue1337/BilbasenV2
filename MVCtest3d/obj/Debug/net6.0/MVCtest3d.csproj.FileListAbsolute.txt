@@ -76,3 +76,4 @@ C:\Users\marti\OneDrive - TEC\3. G\Pro\Eksamensprojekt\github\BilbasenV2\MVCtest
 C:\Users\marti\OneDrive - TEC\3. G\Pro\Eksamensprojekt\github\BilbasenV2\MVCtest3d\obj\Debug\net6.0\MVCtest3d.pdb
 C:\Users\marti\OneDrive - TEC\3. G\Pro\Eksamensprojekt\github\BilbasenV2\MVCtest3d\obj\Debug\net6.0\MVCtest3d.genruntimeconfig.cache
 C:\Users\marti\OneDrive - TEC\3. G\Pro\Eksamensprojekt\github\BilbasenV2\MVCtest3d\obj\Debug\net6.0\ref\MVCtest3d.dll
+C:\Users\marti\OneDrive - TEC\3. G\Pro\Eksamensprojekt\github\BilbasenV2\MVCtest3d\bin\Debug\net6.0\Other\CarsBackup.json

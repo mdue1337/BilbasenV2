@@ -1,0 +1,4 @@
+﻿1. Set up form for POST on "CreateListing", and figure out how to do pictures.
+	1a. ShopController
+		1ab. Handle pictures
+	1b. Database

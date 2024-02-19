@@ -28,16 +28,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/Home/SignUp.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTaWduVXAuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/Shop/CreateListing.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hvcFxDcmVhdGVMaXN0aW5nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/User/SignIn.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxTaWduSW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/User/SignUp.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxTaWduVXAuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/_ViewImports.cshtml]

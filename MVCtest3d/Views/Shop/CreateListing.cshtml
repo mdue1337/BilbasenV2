@@ -1,0 +1,112 @@
+﻿@{
+    ViewData["Title"] = "Create Listing";
+}
+
+<style>
+    .car-list {
+        list-style: none;
+    }
+</style>
+
+<script defer>
+    let cars;
+    
+    async function getCars() {
+        let response = await fetch("https://private-96862-carsapi1.apiary-mock.com/cars");
+        let data = await response.json();
+        cars = data
+        var brandInput = document.getElementById('brand').value;
+        BrandSort(brandInput)
+    }
+
+    function BrandSort(name) {
+        cars = cars.filter(function (element) {
+            return element.make === name
+        })
+        ShowCars()
+    }
+
+    function ShowCars() {
+        let div = document.getElementById("cars")
+       
+        if (div.innerHTML.trim() !== "") {
+            div.innerHTML = "";
+        }
+
+        let list = document.createElement("ul");
+        list.classList.add("car-list");
+
+        for (let i = 0; i < cars.length; i++) {
+            let listItem = document.createElement("li");
+
+            let rb = document.createElement("input");
+            rb.type = "radio";
+            rb.name = "carSelection";
+            rb.value = i;
+            rb.id = `car${i}`;
+            rb.addEventListener("change", DisplayRadioSelect)
+
+            let labelrb = document.createElement("label");
+            labelrb.textContent = cars[i].model;
+            labelrb.htmlFor = `car${i}`;
+
+            listItem.appendChild(rb);
+            listItem.appendChild(labelrb);
+            list.appendChild(listItem);
+        }
+
+        div.appendChild(list);
+    }
+
+    function DisplayRadioSelect() {
+        let selectedIndex = parseInt(this.value);
+        let selectedCar = cars[selectedIndex];
+        let div = document.getElementById("cars")
+        let p = document.getElementById("pSelected");
+
+        if (p) {
+            div.removeChild(p);
+        }
+
+        let pSelected = document.createElement("p")
+        pSelected.id = "pSelected"
+        pSelected.textContent = "You selected: " + selectedCar.make + " " + selectedCar.model
+        div.appendChild(pSelected);
+    }
+
+</script>
+
+<div>
+    <p>Please select a brand to find models for.</p>
+    <label for="brand">Brand:</label>
+    <select id="brand">
+        <option value="alfa-romeo">Alfa Romeo</option>
+        <option value="aston-martin">Aston Martin</option>
+        <option value="audi">Audi</option>
+        <option value="bmw">BMW</option>
+        <option value="fiat">Fiat</option>
+        <option value="ferrari">Ferrari</option>
+        <option value="ford">Ford</option>
+        <option value="hyundai">Hyundai</option>
+        <option value="jaguar">Jaguar</option>
+        <option value="jeep">Jeep</option>
+        <option value="land-rover">Land Rover</option>
+        <option value="mazda">Mazda</option>
+        <option value="mercedes-benz">Mercedes-Benz</option>
+        <option value="porsche">Porsche</option>
+        <option value="toyota">Toyota</option>
+        <option value="volkswagen">Volkswagen</option>
+    </select>
+    <button onclick="getCars()">Get makes</button><br /><br />
+    <div id="cars"></div>
+    <div id="carForm">
+        <form>
+            <--!-->Form needs: horsepower, brand, model, and a timestamp + pictures</>
+            <label>What is your listing price? (dollars)</label><br />
+            <input type="number" min="0"/><br />
+            <label>When is your car from?</label><br />
+            <input type="number" min="1970" max="2024"/>
+        </form>
+    </div>
+</div>
+

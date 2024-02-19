@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Sign Up";
+    // Gem data i LocalStorage
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div>
+    <p>Please enter your information:</p>
+    <form method="post">
+        <label for="Email">Mail:</label><br />
+        <input type="text" name="Email" id="Email" required /><br />
+        <label for="Password">Password:</label><br />
+        <input type="password" name="Password" id="Password" required /><br /><br />
+
+        <input type="submit" value="Submit" />
+    </form>
+
+</div>
+
+           
