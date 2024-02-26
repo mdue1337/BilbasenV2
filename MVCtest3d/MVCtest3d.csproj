@@ -17,9 +17,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\js\chat.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.28" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\js\signalR\" />
   </ItemGroup>
 
 </Project>

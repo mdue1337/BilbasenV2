@@ -1,4 +1,5 @@
 using MVCtest3d.Database;
+using MVCtest3d.Hubs;
 
 namespace MVCtest3d
 {
@@ -11,6 +12,7 @@ namespace MVCtest3d
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddTransient<DatabaseConnection>();
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
 
@@ -32,6 +34,8 @@ namespace MVCtest3d
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapHub<ChatHub>("/chatHub");
 
             app.Run();
         }

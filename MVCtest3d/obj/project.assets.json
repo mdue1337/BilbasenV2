@@ -154,11 +154,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\marti\\OneDrive - TEC\\3. G\\Pro\\Eksamensprojekt\\github\\BilbasenV2\\MVCtest3d\\MVCtest3d.csproj",
+      "projectUniqueName": "C:\\Users\\marti\\Documents\\Code Projects\\Bilbasen V2\\BilbasenV2\\MVCtest3d\\MVCtest3d.csproj",
       "projectName": "MVCtest3d",
-      "projectPath": "C:\\Users\\marti\\OneDrive - TEC\\3. G\\Pro\\Eksamensprojekt\\github\\BilbasenV2\\MVCtest3d\\MVCtest3d.csproj",
+      "projectPath": "C:\\Users\\marti\\Documents\\Code Projects\\Bilbasen V2\\BilbasenV2\\MVCtest3d\\MVCtest3d.csproj",
       "packagesPath": "C:\\Users\\marti\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\marti\\OneDrive - TEC\\3. G\\Pro\\Eksamensprojekt\\github\\BilbasenV2\\MVCtest3d\\obj\\",
+      "outputPath": "C:\\Users\\marti\\Documents\\Code Projects\\Bilbasen V2\\BilbasenV2\\MVCtest3d\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\marti\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -219,7 +219,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

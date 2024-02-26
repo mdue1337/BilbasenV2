@@ -36,7 +36,7 @@ namespace MVCtest3d.Controllers
 
                 _db.CreateListing(model, userId);
 
-                return BadRequest();
+                return BadRequest(); // fix
             }
             catch (Exception)
             {
