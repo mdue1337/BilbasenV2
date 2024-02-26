@@ -70,7 +70,7 @@ namespace MVCtest3d.Database
             }
         }
 
-        public List<UserModel> LoginUser(string email, string password)
+        public UserModel LoginUser(string email, string password)
         {
             if(password.Length != 9 && !password.All(char.IsDigit))
             {
@@ -80,9 +80,9 @@ namespace MVCtest3d.Database
             using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
                 string sql = "SELECT * FROM User WHERE Email = @Email AND Password = @Password";
-                var output = cnn.Query<UserModel>(sql, new { Email = email, Password = password }).ToList();
+                UserModel output = cnn.QueryFirstOrDefault<UserModel>(sql, new { Email = email, Password = password });
 
-                if(output.Count == 0)
+                if(output == null)
                 {
                     throw new Exception("User not found");
                 }
@@ -101,6 +101,15 @@ namespace MVCtest3d.Database
             {
                 string sql = "UPDATE User SET Password = @Password WHERE User.Id = @Id";
                 cnn.Execute(sql, new {Password = password, Id = id});
+            }
+        }
+
+        public void CreateListing(ListingModel model, int userId)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = "INSERT INTO Listing (User.Id, Price, Year, Horsepower, Brand, Model, Created) VALUES (@User, @Price, @Year, @Horsepower, @Brand, @Model, @Created)";
+                cnn.Execute(sql, new { User = userId, Price = model.Price, Year = model.Year, Horsepower = model.Horsepower, Brand = model.Brand, Model = model.Model, Created = model.Created });
             }
         }
     }

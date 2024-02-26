@@ -2,6 +2,13 @@
     ViewData["Title"] = "Home Page";
 }
 
+@if (TempData["LoginConfirmation"] != null)
+{
+    <div class="alert alert-good" role="alert">
+        @TempData["LoginConfirmation"]
+    </div>
+}
+
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>

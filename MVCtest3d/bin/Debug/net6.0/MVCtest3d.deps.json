@@ -9,6 +9,7 @@
       "MVCtest3d/1.0.0": {
         "dependencies": {
           "Dapper": "2.1.28",
+          "SixLabors.ImageSharp": "3.1.2",
           "System.Data.SQLite.Core": "1.0.118"
         },
         "runtime": {
@@ -20,6 +21,14 @@
           "lib/net5.0/Dapper.dll": {
             "assemblyVersion": "2.0.0.0",
             "fileVersion": "2.1.28.55233"
+          }
+        }
+      },
+      "SixLabors.ImageSharp/3.1.2": {
+        "runtime": {
+          "lib/net6.0/SixLabors.ImageSharp.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.1.2.0"
           }
         }
       },
@@ -72,6 +81,13 @@
       "sha512": "sha512-ha49pzOEDmCPkMxwfPSR/wxa/6RD3r42TESIgpzpi7FXq/gNVUuJVEO+wtUzntNRhtmq3BKCl0s0aAlSZLkBUA==",
       "path": "dapper/2.1.28",
       "hashPath": "dapper.2.1.28.nupkg.sha512"
+    },
+    "SixLabors.ImageSharp/3.1.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PYdR6GUI+gW6LBaAQKTik0Ai8oLpFAz3a/KrVusxoTg3kf7F3cuIqKMhJGsuQcmDHCF+iD81Pyn4cexyHrb1ZA==",
+      "path": "sixlabors.imagesharp/3.1.2",
+      "hashPath": "sixlabors.imagesharp.3.1.2.nupkg.sha512"
     },
     "Stub.System.Data.SQLite.Core.NetStandard/1.0.118": {
       "type": "package",

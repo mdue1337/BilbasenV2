@@ -29,7 +29,10 @@ namespace MVCtest3d.Controllers
             };
 
             _db.CreateUser(testMail, user);
-            return View();
+
+            TempData["LoginConfirmation"] = "Please check your email for your login code";
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -43,19 +46,31 @@ namespace MVCtest3d.Controllers
         {
             try
             {
-                List<UserModel> user = _db.LoginUser(Email, Password);
-                if (user[0].Activated == false)
+                UserModel user = _db.LoginUser(Email, Password);
+                if (user.Activated == false)
                 {
-                    return RedirectToAction("Index", "Home"); // update password logic
+                    return View("Information", user); 
                 }
 
-                return View(); // login screen logic 
+                return RedirectToAction("Information", user); // login screen logic 
             }
             catch (Exception)
             {
                 TempData["ErrorMessage"] = "Login failed, try again.";
                 return View();
             }
+        }
+
+        [HttpGet]
+        public IActionResult Information(UserModel user)
+        {
+            return View(user);
+        }
+
+        [HttpGet]
+        public IActionResult PasswordUpdate()
+        {
+            return View();
         }
     }
 }

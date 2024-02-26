@@ -1,23 +1,17 @@
-﻿@model List<UserModel>
-
-@if (ViewBag.SuccessMessage != null)
-{
-    <script>
-        alert('@ViewBag.SuccessMessage');
-    </script>
-}
+﻿@model byte[]
 
 @{
     ViewData["Title"] = "About";
 }
 
-<h1> About </h1>
-<p> We are very handsome :)</p>
-<h2> Members (@Model.Count): </h2>
+<form method="post" enctype="multipart/form-data">
+    <label for="myFile">Upload a JPEG picture</label>
+    <input type="file" id="myFile" name="myFile" accept="image/jpeg" />
+    <input type="submit" />
+</form>
+<br />
 
-@{
-    foreach(UserModel u in Model)
-    {
-        <li>@u.Name</li>
-    }
+@if (Model != null && Model.Length > 0)
+{
+    <img src="data:image/jpeg;base64,@(Convert.ToBase64String(Model))" />
 }

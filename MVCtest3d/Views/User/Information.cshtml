@@ -1,0 +1,13 @@
+﻿@model UserModel
+
+@{
+    ViewData["Title"] = "Information";
+}
+
+<script defer>
+    localStorage.setItem("UserId", @Model.Id)
+</script>
+
+<div>
+    <h1>Welcome @Model.Name</h1>
+</div>

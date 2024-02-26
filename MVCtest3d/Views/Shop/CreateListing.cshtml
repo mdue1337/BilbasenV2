@@ -2,6 +2,13 @@
     ViewData["Title"] = "Create Listing";
 }
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <style>
     .car-list {
         list-style: none;
@@ -10,6 +17,7 @@
 
 <script defer>
     let cars;
+    let selectedIndex;
     
     async function getCars() {
         let response = await fetch("https://private-96862-carsapi1.apiary-mock.com/cars");
@@ -59,10 +67,12 @@
     }
 
     function DisplayRadioSelect() {
-        let selectedIndex = parseInt(this.value);
+        selectedIndex = parseInt(this.value);
         let selectedCar = cars[selectedIndex];
         let div = document.getElementById("cars")
         let p = document.getElementById("pSelected");
+        let divCarForm = document.getElementById("divCarForm");
+        divCarForm.style = "visibility:visible";
 
         if (p) {
             div.removeChild(p);
@@ -74,14 +84,48 @@
         div.appendChild(pSelected);
     }
 
+    document.addEventListener('submit', function(event){
+        event.preventDefault();
+
+        const formInfo = document.getElementById("CarForm")
+
+        let form = new FormData(formInfo);
+
+        let Horsepower = cars[selectedIndex].horsepower
+        let Make = cars[selectedIndex].make
+        let Model = cars[selectedIndex].model
+        let currentDate = new Date()
+        
+        // padder med 0 hvis det ikke er to langt, padding er foran
+        let Timestamp = `${currentDate.getDate().toString().padStart(2, '0')}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getFullYear()}`;
+        let userId = parseInt(JSON.stringify(localStorage.getItem("UserId"))
+
+        form.append("Horsepower", Horsepower)
+        form.append("Brand", Make)
+        form.append("Model", Model)
+        form.append("Timestamp", Timestamp)
+        form.append("userId", userId)
+
+        const url = `https://localhost:${window.location.port}/Shop/CreateListing`;
+        
+        fetch(url, {
+            method: 'POST',
+            body: form
+        })
+        .then(response => {
+            console.log('Form data sent successfully');
+        })
+        .catch(error => {
+            console.error('Error sending form data:', error);
+        });
+    })
+
 </script>
 
 <div>
     <p>Please select a brand to find models for.</p>
     <label for="brand">Brand:</label>
     <select id="brand">
-        <option value="alfa-romeo">Alfa Romeo</option>
-        <option value="aston-martin">Aston Martin</option>
         <option value="audi">Audi</option>
         <option value="bmw">BMW</option>
         <option value="fiat">Fiat</option>
@@ -89,9 +133,7 @@
         <option value="ford">Ford</option>
         <option value="hyundai">Hyundai</option>
         <option value="jaguar">Jaguar</option>
-        <option value="jeep">Jeep</option>
         <option value="land-rover">Land Rover</option>
-        <option value="mazda">Mazda</option>
         <option value="mercedes-benz">Mercedes-Benz</option>
         <option value="porsche">Porsche</option>
         <option value="toyota">Toyota</option>
@@ -99,13 +141,14 @@
     </select>
     <button onclick="getCars()">Get makes</button><br /><br />
     <div id="cars"></div>
-    <div id="carForm">
-        <form>
-            <--!-->Form needs: horsepower, brand, model, and a timestamp + pictures</>
+
+    <div id="divCarForm" style="visibility:hidden;">
+        <form id="CarForm">
             <label>What is your listing price? (dollars)</label><br />
-            <input type="number" min="0"/><br />
+            <input type="number" min="0" id="Price" name="Price"/><br />
             <label>When is your car from?</label><br />
-            <input type="number" min="1970" max="2024"/>
+            <input type="number" min="1970" max="2024" id="Year" name="Year"/><br /><br />
+            <input type="submit" />
         </form>
     </div>
 </div>
