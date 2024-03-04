@@ -24,15 +24,21 @@ namespace MVCtest3d.Controllers
         {
             try
             {
-                ListingModel model = new ListingModel
+                ListingModel model = new()
                 {
                     Price = Price,
                     Year = Year,
                     Horsepower = Horsepower,
                     Brand = Brand,
                     Model = Model,
-                    Created = Timestamp
+                    Created = Timestamp,
+                    UserId = userId
                 };
+
+                if(userId == 0)
+                {
+                    throw new Exception();
+                }
 
                 _db.CreateListing(model, userId);
 

@@ -66,7 +66,7 @@ namespace MVCtest3d.Database
             using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
                 string sql = "INSERT INTO User (Name, Age, Password, Email, Activated) VALUES (@Name, @Age, @Password, @Email, @Activated)";
-                cnn.Execute(sql, new { Name = user.Name, Age = user.Age, Password = verificationCode, Email = recipientEmail, Activated = false });
+                cnn.Execute(sql, new { Name = user.Name, Age = user.Age, Password = verificationCode.ToString(), Email = recipientEmail, Activated = false });
             }
         }
 
@@ -93,6 +93,18 @@ namespace MVCtest3d.Database
             }
         }
 
+        public UserModel GetUser(int id)
+        {
+            // '??' tjekker om venstresiden er null, hvis den er så smider den en exception.
+
+            using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = "SELECT * FROM User WHERE Id = @Id";
+                UserModel user = cnn.QueryFirstOrDefault<UserModel>(sql, new { Id = id });
+                return user ?? throw new Exception("User not found");
+            }
+        }
+
         public void UpdatePassword(string newPassword, int id)
         {
             var password = EncryptionHelper.ComputeSha256Hash(newPassword);
@@ -104,11 +116,20 @@ namespace MVCtest3d.Database
             }
         }
 
+        public void ActivateAccount(int id)
+        {
+            using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = "UPDATE User SET Activated = True WHERE User.Id = @Id";
+                cnn.Execute(sql, new {Id = id});
+            }
+        }
+
         public void CreateListing(ListingModel model, int userId)
         {
             using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
-                string sql = "INSERT INTO Listing (User.Id, Price, Year, Horsepower, Brand, Model, Created) VALUES (@User, @Price, @Year, @Horsepower, @Brand, @Model, @Created)";
+                string sql = "INSERT INTO Listing ('User.Id', Price, Year, Horsepower, Brand, Model, Created) VALUES (@User, @Price, @Year, @Horsepower, @Brand, @Model, @Created)";
                 cnn.Execute(sql, new { User = userId, Price = model.Price, Year = model.Year, Horsepower = model.Horsepower, Brand = model.Brand, Model = model.Model, Created = model.Created });
             }
         }

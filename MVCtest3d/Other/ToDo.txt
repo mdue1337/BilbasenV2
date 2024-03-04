@@ -2,6 +2,4 @@
 	1a. ShopController
 		1b. just need userId to do sql 
 
-
-2. Make localstorage
-	2. check if localstorage is present otherwise dont
+2. Update information sql thing

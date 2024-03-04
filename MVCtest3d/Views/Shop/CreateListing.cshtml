@@ -15,10 +15,11 @@
     }
 </style>
 
+
 <script defer>
     let cars;
     let selectedIndex;
-    
+
     async function getCars() {
         let response = await fetch("https://private-96862-carsapi1.apiary-mock.com/cars");
         let data = await response.json();
@@ -36,7 +37,7 @@
 
     function ShowCars() {
         let div = document.getElementById("cars")
-       
+
         if (div.innerHTML.trim() !== "") {
             div.innerHTML = "";
         }
@@ -84,7 +85,7 @@
         div.appendChild(pSelected);
     }
 
-    document.addEventListener('submit', function(event){
+    document.addEventListener('submit', function (event) {
         event.preventDefault();
 
         const formInfo = document.getElementById("CarForm")
@@ -95,31 +96,30 @@
         let Make = cars[selectedIndex].make
         let Model = cars[selectedIndex].model
         let currentDate = new Date()
-        
+
         // padder med 0 hvis det ikke er to langt, padding er foran
         let Timestamp = `${currentDate.getDate().toString().padStart(2, '0')}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getFullYear()}`;
-        let userId = parseInt(JSON.stringify(localStorage.getItem("UserId"))
+        let userId = parseInt(JSON.stringify(sessionStorage.getItem("UserId")));
 
-        form.append("Horsepower", Horsepower)
-        form.append("Brand", Make)
-        form.append("Model", Model)
-        form.append("Timestamp", Timestamp)
-        form.append("userId", userId)
+                form.append("Horsepower", Horsepower)
+                form.append("Brand", Make)
+                form.append("Model", Model)
+                form.append("Timestamp", Timestamp)
+                form.append("userId", userId)
 
-        const url = `https://localhost:${window.location.port}/Shop/CreateListing`;
-        
+                const url = `https://localhost:${window.location.port}/Shop/CreateListing`;
+
         fetch(url, {
             method: 'POST',
             body: form
         })
-        .then(response => {
-            console.log('Form data sent successfully');
-        })
-        .catch(error => {
-            console.error('Error sending form data:', error);
-        });
+            .then(response => {
+                console.log('Form data sent successfully');
+            })
+            .catch(error => {
+                console.error('Error sending form data:', error);
+            });
     })
-
 </script>
 
 <div>
@@ -152,4 +152,3 @@
         </form>
     </div>
 </div>
-

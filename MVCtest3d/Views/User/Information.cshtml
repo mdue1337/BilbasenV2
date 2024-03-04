@@ -5,9 +5,25 @@
 }
 
 <script defer>
-    localStorage.setItem("UserId", @Model.Id)
+    sessionStorage.setItem("UserId", @Model.Id);
+
+    document.addEventListener('submit', function (event) {
+        if (!confirm("Do you want to update info?")) {
+            event.preventDefault();
+        }
+    });
 </script>
 
 <div>
     <h1>Welcome @Model.Name</h1>
+    <p>This is your user info</p>
+    <form>
+        <label for="Name">Name:</label>
+        <input type="text" value="@Model.Name" id="Name"/><br />
+        <label for="Name">Email:</label>
+        <input type="email" value="@Model.Email" id="Email" /><br />
+        <label for="Name">Password:</label>
+        <input type="password" placeholder="password" id="Pw" />
+        <button type="submit">Update</button>
+    </form>
 </div>
