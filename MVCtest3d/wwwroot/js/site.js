@@ -4,5 +4,5 @@
 // Write your JavaScript code.
 
 (function Initialize() {
-    console.log("gs script");
+    localStorage.clear()
 })();

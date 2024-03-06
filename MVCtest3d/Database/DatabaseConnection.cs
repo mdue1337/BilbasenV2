@@ -133,5 +133,46 @@ namespace MVCtest3d.Database
                 cnn.Execute(sql, new { User = userId, Price = model.Price, Year = model.Year, Horsepower = model.Horsepower, Brand = model.Brand, Model = model.Model, Created = model.Created });
             }
         }
+
+        public ListingModel GetSpecificListing(int id)
+        {
+            using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = "SELECT * FROM Listing WHERE Listing.Id = @Id";
+                ListingModel l = cnn.QueryFirstOrDefault<ListingModel>(sql, new {Id = id}) ?? throw new Exception();
+                return l;
+            }
+        }
+
+        public List<ListingModel> GetAllListing()
+        {
+            using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = "SELECT * FROM Listing";
+                List<ListingModel> l = cnn.Query<ListingModel>(sql).ToList();
+                return l;
+            }
+        }
+
+        public void InsertPicture(byte[] img, int listingId)
+        {
+            using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql1 = "INSERT INTO Picture (data) VALUES (@Data);  SELECT last_insert_rowid()";
+                int PictureId = cnn.ExecuteScalar<int>(sql1, new { Data = img });
+                string sql2 = "INSERT INTO ListingPicture ('Listing.Id', 'Picture.Id') VALUES (@ListingId, @PictureId);";
+                cnn.Execute(sql2, new { ListingId = listingId, PictureId = PictureId });
+            }
+        }
+
+        public List<PictureModel> GetListingPictures(int ListingId)
+        {
+            using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = "SELECT * FROM ListingPicture INNER JOIN Picture ON ListingPicture.'Picture.Id' = Picture.Id WHERE ListingPicture.'Listing.Id' = @Id";
+                List<PictureModel> pictures = cnn.Query<PictureModel>(sql, new { Id = ListingId }).ToList();
+                return pictures;
+            }
+        }
     }
 }

@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVCtest3d.Database;
 using MVCtest3d.Database.DatabaseModels;
+using MVCtest3d.Models;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MVCtest3d.Controllers
 {
@@ -42,12 +47,60 @@ namespace MVCtest3d.Controllers
 
                 _db.CreateListing(model, userId);
 
-                return BadRequest(); // fix
+                return RedirectToAction("Listing", "Shop", new {id = model.Id});
             }
             catch (Exception)
             {
                 TempData["ErrorMessage"] = "Failed creating the listing, try again";
                 return View();
+            }
+        }
+
+        [HttpGet]
+        public IActionResult UpdateListing(ListingModel listing)
+        {
+            listing = _db.GetSpecificListing(listing.Id);
+            List<PictureModel> pictures = _db.GetListingPictures(listing.Id);
+
+            UpdateListingModel info = new()
+            {
+                ListingModel = listing,
+                PictureModel = pictures
+            };
+
+            return View(info);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateListing(IFormFile myFile, int ListingId)
+        {
+            try
+            {
+                byte[] imageBytes;
+
+                using (var ms = new MemoryStream())
+                {
+                    myFile.CopyTo(ms);
+                    ms.Seek(0, SeekOrigin.Begin);
+
+                    using (var image = Image.Load(ms))
+                    {
+                        using (var outputStream = new MemoryStream())
+                        {
+                            image.Save(outputStream, new JpegEncoder());
+                            imageBytes = outputStream.ToArray();
+                        }
+                    }
+                }
+
+                _db.InsertPicture(imageBytes, ListingId);
+
+                return RedirectToAction("UpdateListing", "Shop", new { id = ListingId });
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Failed uploading picture, try again";
+                return RedirectToAction("UpdateListing", "Shop", new { id = ListingId });
             }
         }
     }

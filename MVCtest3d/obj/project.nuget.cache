@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VjKzOfqPI5d9uwQ3JoYhejcX0MDQUjoaaP9ZrzCI8eZ0G4sYj1WbH9kW0skVRnZfiyUYstXZ6a+OQt8vebMN8w==",
+  "dgSpecHash": "1ulG/ecA0rLsVyIrC+5+VNg9X6rB4w4E6nM4Ds97g70JArJ45quq6RunbQLuS24puJaQSorRQW3AXY7sOj5/XQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\marti\\Documents\\Code Projects\\Bilbasen V2\\BilbasenV2\\MVCtest3d\\MVCtest3d.csproj",
+  "projectFilePath": "C:\\Users\\marti\\OneDrive - TEC\\3. G\\Pro\\Eksamensprojekt\\github\\BilbasenV2\\MVCtest3d\\MVCtest3d.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\marti\\.nuget\\packages\\dapper\\2.1.28\\dapper.2.1.28.nupkg.sha512",
     "C:\\Users\\marti\\.nuget\\packages\\sixlabors.imagesharp\\3.1.2\\sixlabors.imagesharp.3.1.2.nupkg.sha512",
