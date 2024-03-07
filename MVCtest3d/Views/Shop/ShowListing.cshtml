@@ -1,0 +1,100 @@
+﻿@model UpdateListingModel
+
+@{
+    ViewData["Title"] = "Show Listing";
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<script defer>
+    document.addEventListener("onclick", function (event) {
+        console.log("hej")
+        var confirmation = confirm("Are you sure you want to buy this item?");
+
+        if (!confirmation) {
+            event.preventDefault();
+        }
+    })
+
+    function buy() {
+        let listingId = parseInt(@Model.ListingModel.Id);
+        let buyerId = parseInt(JSON.stringify(sessionStorage.getItem("UserId")));
+
+        console.log(buyerId)
+
+        let form = document.createElement("form")
+        form.method = 'POST';
+        form.action = "/Shop/ShowListing"
+        
+        let listingIdInput = document.createElement("input");
+        listingIdInput.name = "ListingId"
+        listingIdInput.type = "hidden";
+        listingIdInput.value = listingId;
+        form.appendChild(listingIdInput);
+        
+        let buyerIdInput = document.createElement("input");
+        buyerIdInput.name = "BuyerId"
+        buyerIdInput.type = "hidden";
+        buyerIdInput.value = buyerIdInput; 
+        form.appendChild(buyerIdInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+</style>
+
+<div>
+    <h1>Information about @Model.ListingModel.Brand @Model.ListingModel.Model</h1>
+    <table>
+        <tr>
+            <th>Price</th>
+            <th>Horsepower</th>
+            <th>Year</th>
+            <th>Created</th>
+        </tr>
+        <tr>
+            <td>@Model.ListingModel.Price</td>
+            <td>@Model.ListingModel.Horsepower</td>
+            <td>@Model.ListingModel.Year</td>
+            <td>@Model.ListingModel.Created</td>
+        </tr>
+    </table>
+
+    <h2>Pictures</h2>
+    <div id="CarPictures">
+        @if(Model.PictureModel.Count > 0)
+        {
+            @for (int i = 0; i < Model.PictureModel.Count; i++)
+            {
+                var base64String = Convert.ToBase64String(Model.PictureModel[i].Data);
+                <img id="picture{@i}" src="data:image/jpeg;base64,@base64String" />
+            }
+        }
+        else
+        {
+            <p>No pictures</p>
+        }
+    </div>
+
+    <div>
+        <button onclick="buy()">Buy listing</button>
+    </div>
+</div>

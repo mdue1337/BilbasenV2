@@ -129,8 +129,8 @@ namespace MVCtest3d.Database
         {
             using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
-                string sql = "INSERT INTO Listing ('User.Id', Price, Year, Horsepower, Brand, Model, Created) VALUES (@User, @Price, @Year, @Horsepower, @Brand, @Model, @Created)";
-                cnn.Execute(sql, new { User = userId, Price = model.Price, Year = model.Year, Horsepower = model.Horsepower, Brand = model.Brand, Model = model.Model, Created = model.Created });
+                string sql = "INSERT INTO Listing ('User.Id', Price, Year, Horsepower, Brand, Model, Created, Location) VALUES (@User, @Price, @Year, @Horsepower, @Brand, @Model, @Created, @Location)";
+                cnn.Execute(sql, new { User = userId, Price = model.Price, Year = model.Year, Horsepower = model.Horsepower, Brand = model.Brand, Model = model.Model, Created = model.Created, Location = model.Location});
             }
         }
 
@@ -172,6 +172,14 @@ namespace MVCtest3d.Database
                 string sql = "SELECT * FROM ListingPicture INNER JOIN Picture ON ListingPicture.'Picture.Id' = Picture.Id WHERE ListingPicture.'Listing.Id' = @Id";
                 List<PictureModel> pictures = cnn.Query<PictureModel>(sql, new { Id = ListingId }).ToList();
                 return pictures;
+            }
+        }
+
+        public void PurchaseListing(int listingId)
+        {
+            using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+
             }
         }
     }

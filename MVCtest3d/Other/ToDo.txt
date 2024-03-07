@@ -1,5 +1,3 @@
-﻿1. Set up form for POST on "CreateListing", and figure out how to do pictures.
-	1a. ShopController
-		1b. just need userId to do sql 
+﻿3. delete listing and picture
 
-2. Update information sql thing
+4. 

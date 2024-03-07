@@ -25,7 +25,7 @@ namespace MVCtest3d.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateListing(int Price, int Year, int Horsepower, string Brand, string Model, string Timestamp, int userId)
+        public IActionResult CreateListing(int Price, int Year, int Horsepower, string Brand, string Model, string Timestamp, int userId, string Location)
         {
             try
             {
@@ -37,7 +37,8 @@ namespace MVCtest3d.Controllers
                     Brand = Brand,
                     Model = Model,
                     Created = Timestamp,
-                    UserId = userId
+                    UserId = userId,
+                    Location = Location
                 };
 
                 if(userId == 0)
@@ -47,7 +48,7 @@ namespace MVCtest3d.Controllers
 
                 _db.CreateListing(model, userId);
 
-                return RedirectToAction("Listing", "Shop", new {id = model.Id});
+                return RedirectToAction("UpdateListing", "Shop", new {id = model.Id});
             }
             catch (Exception)
             {
@@ -102,6 +103,33 @@ namespace MVCtest3d.Controllers
                 TempData["ErrorMessage"] = "Failed uploading picture, try again";
                 return RedirectToAction("UpdateListing", "Shop", new { id = ListingId });
             }
+        }
+
+        [HttpGet]
+        public IActionResult ShowListing(ListingModel listing)
+        {
+            listing = _db.GetSpecificListing(listing.Id);
+            List<PictureModel> pictures = _db.GetListingPictures(listing.Id);
+
+            UpdateListingModel info = new()
+            {
+                ListingModel = listing,
+                PictureModel = pictures
+            };
+
+            return View(info);
+        }
+
+        [HttpPost]
+        public IActionResult ShowListing(int ListingId, int? BuyerId)
+        {
+            if(BuyerId == null)
+            {
+                TempData["ErrorMessage"] = "You must be logged in to buy a product";
+                return RedirectToAction("Index", "Home");
+            }
+            // do logik
+            return View();
         }
     }
 }

@@ -4,6 +4,7 @@ using MVCtest3d.Models;
 using System.Diagnostics;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp;
+using MVCtest3d.Database.DatabaseModels;
 
 namespace MVCtest3d.Controllers
 {
@@ -16,9 +17,11 @@ namespace MVCtest3d.Controllers
             _db = db;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            List<ListingModel> listings = _db.GetAllListing();
+            return View(listings);
         }
 
         public IActionResult Privacy()
