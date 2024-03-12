@@ -78,7 +78,7 @@
         </tr>
     </table>
 
-    <h2>Pictures</h2>
+    <h2>Pictures</h2><br />
     <div id="CarPictures">
         @if(Model.PictureModel.Count > 0)
         {
@@ -90,8 +90,13 @@
         }
         else
         {
-            <p>No pictures</p>
+            <p>Listing has no pictures</p>
         }
+    </div>
+
+    <div id="google-maps">
+        <h2>Location: @Model.ListingModel.Location</h2>
+        
     </div>
 
     <div>
