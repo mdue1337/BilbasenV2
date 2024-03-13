@@ -97,10 +97,15 @@ namespace MVCtest3d.Controllers
         [HttpPost]
         public IActionResult PasswordUpdate(int Id, string Password, string confirmPSW)
         {
-            if (Password != confirmPSW)
+            if (Password is null || confirmPSW is null)
+            {
+                TempData["ErrorMessage"] = "Please enter a password";
+                return RedirectToAction("PasswordUpdate", "User", new { id = Id });
+            }
+            else if (Password != confirmPSW)
             {
                 TempData["ErrorMessage"] = "Passwords do not match.";
-                return RedirectToAction("PasswordUpdate", "User", Id);
+                return RedirectToAction("PasswordUpdate", "User", new { id = Id });
             }
 
             try
@@ -115,7 +120,7 @@ namespace MVCtest3d.Controllers
             catch (Exception)
             {
                 TempData["ErrorMessage"] = "Failed updating password, please try again";
-                return RedirectToAction("PasswordUpdate", "User", Id);
+                return RedirectToAction("PasswordUpdate", "User", new { id = Id });
             }
         }
     }
