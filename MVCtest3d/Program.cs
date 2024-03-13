@@ -13,6 +13,7 @@ namespace MVCtest3d
             builder.Services.AddControllersWithViews();
             builder.Services.AddTransient<DatabaseConnection>();
             builder.Services.AddSignalR();
+            builder.Services.AddSession();
 
             var app = builder.Build();
 
@@ -26,9 +27,8 @@ namespace MVCtest3d
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.MapControllerRoute(

@@ -2,10 +2,9 @@
 using MVCtest3d.Database;
 using MVCtest3d.Database.DatabaseModels;
 using MVCtest3d.Models;
+using MVCtest3d.Other;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Processing;
-using System.Diagnostics.CodeAnalysis;
 
 namespace MVCtest3d.Controllers
 {
@@ -110,26 +109,39 @@ namespace MVCtest3d.Controllers
         {
             listing = _db.GetSpecificListing(listing.Id);
             List<PictureModel> pictures = _db.GetListingPictures(listing.Id);
+            Uri maps = MapsCollector.GenerateMap(listing.Location);
 
-            UpdateListingModel info = new()
+            ShowListingModel info = new()
             {
                 ListingModel = listing,
-                PictureModel = pictures
+                PictureModel = pictures,
+                GoogleMaps = maps
             };
 
             return View(info);
         }
 
         [HttpPost]
-        public IActionResult ShowListing(int ListingId, int? BuyerId)
+        public IActionResult ShowListing(int ListingId)
         {
+            int? BuyerId = HttpContext.Session.GetInt32("UserId");
+
             if(BuyerId == null)
             {
                 TempData["ErrorMessage"] = "You must be logged in to buy a product";
                 return RedirectToAction("Index", "Home");
             }
-            // do logik
-            return View();
+
+            try
+            {
+                _db.PurchaseListing(ListingId, (int)BuyerId);
+                TempData["BuySucess"] = "You succesfully bought this listing";
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception)
+            {
+                return View(new { id = ListingId });
+            }
         }
     }
 }

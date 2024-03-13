@@ -129,8 +129,8 @@ namespace MVCtest3d.Database
         {
             using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
-                string sql = "INSERT INTO Listing ('User.Id', Price, Year, Horsepower, Brand, Model, Created, Location) VALUES (@User, @Price, @Year, @Horsepower, @Brand, @Model, @Created, @Location)";
-                cnn.Execute(sql, new { User = userId, Price = model.Price, Year = model.Year, Horsepower = model.Horsepower, Brand = model.Brand, Model = model.Model, Created = model.Created, Location = model.Location});
+                string sql = "INSERT INTO Listing ('User.Id', Price, Year, Horsepower, Brand, Model, Created, Location, Status) VALUES (@User, @Price, @Year, @Horsepower, @Brand, @Model, @Created, @Location, @Status)";
+                cnn.Execute(sql, new { User = userId, Price = model.Price, Year = model.Year, Horsepower = model.Horsepower, Brand = model.Brand, Model = model.Model, Created = model.Created, Location = model.Location, Status = 1});
             }
         }
 
@@ -158,10 +158,24 @@ namespace MVCtest3d.Database
         {
             using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
-                string sql1 = "INSERT INTO Picture (data) VALUES (@Data);  SELECT last_insert_rowid()";
-                int PictureId = cnn.ExecuteScalar<int>(sql1, new { Data = img });
-                string sql2 = "INSERT INTO ListingPicture ('Listing.Id', 'Picture.Id') VALUES (@ListingId, @PictureId);";
-                cnn.Execute(sql2, new { ListingId = listingId, PictureId = PictureId });
+                cnn.Open();
+    
+                using(IDbTransaction transaction = cnn.BeginTransaction())
+                {
+                    try
+                    {
+                        string sql1 = "INSERT INTO Picture (data) VALUES (@Data);  SELECT last_insert_rowid()";
+                        int PictureId = cnn.ExecuteScalar<int>(sql1, new { Data = img });
+                        string sql2 = "INSERT INTO ListingPicture ('Listing.Id', 'Picture.Id') VALUES (@ListingId, @PictureId);";
+                        cnn.Execute(sql2, new { ListingId = listingId, PictureId = PictureId });
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                    }
+                }
             }
         }
 
@@ -175,11 +189,29 @@ namespace MVCtest3d.Database
             }
         }
 
-        public void PurchaseListing(int listingId)
+        public void PurchaseListing(int listingId, int userId)
         {
             using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
+                cnn.Open();
 
+                using(IDbTransaction transaction = cnn.BeginTransaction())
+                {
+                    try
+                    {
+                        string sql = "INSERT INTO BuyHistory ('User.Id', 'Listing.Id') VALUES (@UId, @LId);";
+                        cnn.Execute(sql, new { UId = userId, LId = listingId });
+
+                        string sql2 = "UPDATE Listing SET Status = 0 WHERE Id = @LId";
+                        cnn.Execute(sql2, new { LId = listingId });
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                    }
+                }
             }
         }
     }

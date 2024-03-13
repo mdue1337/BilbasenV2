@@ -11,5 +11,6 @@
         public string Model { get; set; }
         public string Created {  get; set; }
         public string Location { get; set; }
+        public bool Status { get; set; }
     }
 }

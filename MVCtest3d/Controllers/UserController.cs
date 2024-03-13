@@ -53,6 +53,7 @@ namespace MVCtest3d.Controllers
                     return RedirectToAction("PasswordUpdate", "User", new { id = user.Id });
                 }
                 // Man kunne også videresende det hele, men så står det oppe i URL'et. Vi sender dermed kun userId og derefter hentes dataen til det id
+                HttpContext.Session.SetInt32("UserId", user.Id);
                 return RedirectToAction("Information", "User", new { id = user.Id });
             }
             catch (Exception)
@@ -67,6 +68,10 @@ namespace MVCtest3d.Controllers
         {
             try
             {
+                if (HttpContext.Session.GetInt32("UserId") != user.Id)
+                {
+                    throw new();
+                }
                 UserModel _user = _db.GetUser(user.Id);
                 return View(_user);
             }
@@ -98,12 +103,13 @@ namespace MVCtest3d.Controllers
                 return RedirectToAction("PasswordUpdate", "User", Id);
             }
 
-            string encrypted = EncryptionHelper.ComputeSha256Hash(Password);
-
             try
             {
-                _db.UpdatePassword(encrypted, Id);
+                _db.UpdatePassword(Password, Id);
                 _db.ActivateAccount(Id);
+
+                HttpContext.Session.SetInt32("UserId", Id);
+
                 return RedirectToAction("Information", "User", new { id = Id });
             }
             catch (Exception)

@@ -1,4 +1,4 @@
-﻿@model UpdateListingModel
+﻿@model ShowListingModel
 
 @{
     ViewData["Title"] = "Show Listing";
@@ -12,20 +12,14 @@
 }
 
 <script defer>
-    document.addEventListener("onclick", function (event) {
-        console.log("hej")
+    function buy() {
         var confirmation = confirm("Are you sure you want to buy this item?");
 
         if (!confirmation) {
-            event.preventDefault();
+            return;
         }
-    })
 
-    function buy() {
         let listingId = parseInt(@Model.ListingModel.Id);
-        let buyerId = parseInt(JSON.stringify(sessionStorage.getItem("UserId")));
-
-        console.log(buyerId)
 
         let form = document.createElement("form")
         form.method = 'POST';
@@ -36,12 +30,6 @@
         listingIdInput.type = "hidden";
         listingIdInput.value = listingId;
         form.appendChild(listingIdInput);
-        
-        let buyerIdInput = document.createElement("input");
-        buyerIdInput.name = "BuyerId"
-        buyerIdInput.type = "hidden";
-        buyerIdInput.value = buyerIdInput; 
-        form.appendChild(buyerIdInput);
 
         document.body.appendChild(form);
         form.submit();
@@ -94,7 +82,12 @@
         }
     </div>
 
+    <div id="googleMaps">
+        <h2>Location</h2>
+        <img src="@Model.GoogleMaps" alt="Google Map" width="400" height="400" />
+    </div><br />
+
     <div>
-        <button onclick="buy()">Buy listing</button>
+        <button id="buyButton" onclick="buy()">Buy listing</button>
     </div>
 </div>

@@ -16,6 +16,12 @@ else if (TempData["ErrorMessage"] != null)
         @TempData["ErrorMessage"]
     </div>
 }
+else if (TempData["BuySucess"] != null)
+{
+    <div class="alert alert-good" role="alert">
+        @TempData["BuySucess"]
+    </div>
+}
 
 <style>
     .box {
@@ -32,6 +38,12 @@ else if (TempData["ErrorMessage"] != null)
 </style>
 
 <div class="row">
+    @if(Model.Count == 0)
+    {
+        <div>
+            <h1>There are currently no listings</h1>
+        </div>
+    }
     @for (int i = 0; i < @Model.Count; i++)
     {
         var columnNumber = i % 3;

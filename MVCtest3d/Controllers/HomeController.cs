@@ -21,6 +21,7 @@ namespace MVCtest3d.Controllers
         public IActionResult Index()
         {
             List<ListingModel> listings = _db.GetAllListing();
+            listings = listings.Where(x => x.Status == true).ToList();
             return View(listings);
         }
 
