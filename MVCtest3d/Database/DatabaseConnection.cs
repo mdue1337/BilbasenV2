@@ -23,25 +23,20 @@ namespace MVCtest3d.Database
 
         private static Random random = new Random();
 
-        public void CreateUser(string recipientEmail, UserModel user)
+        public string GenerateVerifactionCode()
         {
-            using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            string code = random.Next(0, 10).ToString();
+
+            while (code.Length < 9)
             {
-                string sql = "SELECT COUNT(*) FROM User WHERE Email = @Email";
-                var exists = cnn.QueryFirstOrDefault<int>(sql, new { Email = recipientEmail });
-                if(exists == 1)
-                {
-                    throw new Exception("E-mail is already in use");
-                }
+                code += random.Next(0, 10);
             }
 
-            string verificationCode = random.Next(0, 10).ToString();
+            return code;
+        }
 
-            while (verificationCode.Length < 9)
-            {
-                verificationCode += random.Next(0, 10);
-            }
-
+        public void SendEmail(string recipientEmail, string verificationCode)
+        {
             // https://learn.microsoft.com/en-us/answers/questions/1167393/send-email-form-gmail-account-using-c
             using (var client = new SmtpClient())
             {
@@ -62,6 +57,23 @@ namespace MVCtest3d.Database
                     client.Send(message);
                 }
             }
+        }
+
+        public void CreateUser(string recipientEmail, UserModel user)
+        {
+            using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = "SELECT COUNT(*) FROM User WHERE Email = @Email";
+                var exists = cnn.QueryFirstOrDefault<int>(sql, new { Email = recipientEmail });
+                if(exists == 1)
+                {
+                    throw new Exception("E-mail is already in use");
+                }
+            }
+
+            string verificationCode = GenerateVerifactionCode();
+
+            SendEmail(recipientEmail, verificationCode);
 
             using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
@@ -113,6 +125,27 @@ namespace MVCtest3d.Database
             {
                 string sql = "UPDATE User SET Password = @Password WHERE User.Id = @Id";
                 cnn.Execute(sql, new {Password = password, Id = id});
+            }
+        }
+
+        public void ResetPassword(string email)
+        {
+            using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = "SELECT User.Id FROM User WHERE Email = @Email";
+                int? id = cnn.QueryFirstOrDefault<int?>(sql, new {Email = email});
+
+                if(id is null) // check for default value.
+                {
+                    return; // bare stop, dog skal brugeren ikke vide at der ikke findes en bruger med den mail.
+                }
+
+                string VCode = GenerateVerifactionCode();
+
+                string sql2 = "UPDATE User SET Password = @Password WHERE User.Id = @Id; UPDATE User SET Activated = False WHERE User.Id = @Id";
+                cnn.Execute(sql2, new { Password = VCode, Id = id});
+
+                SendEmail(email, VCode);
             }
         }
 
@@ -191,16 +224,16 @@ namespace MVCtest3d.Database
 
         public void PurchaseListing(int listingId, int userId)
         {
-            using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            int sellerId = GetSpecificListing(listingId).Id;
+
+            if (sellerId == userId)
+            {
+                throw new InvalidOperationException();
+            }
+
+            using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
                 cnn.Open();
-
-                int sellerId = GetSpecificListing(listingId).Id;
-
-                if(sellerId == userId)
-                {
-                    throw new InvalidOperationException();
-                }
 
                 using(IDbTransaction transaction = cnn.BeginTransaction())
                 {

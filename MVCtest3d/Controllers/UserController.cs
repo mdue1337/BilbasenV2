@@ -143,5 +143,19 @@ namespace MVCtest3d.Controllers
                 return RedirectToAction("PasswordUpdate", "User", new { id = Id });
             }
         }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ForgotPassword(string email)
+        {
+            _db.ResetPassword(email);
+            TempData["email"] = $"Mail sent to: {email}";
+            return RedirectToAction("SignIn", "User");
+        }
     }
 }

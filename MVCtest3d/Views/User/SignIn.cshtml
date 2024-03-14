@@ -9,16 +9,22 @@
         @TempData["ErrorMessage"]
     </div>
 }
+else if (TempData["email"] != null)
+{
+    <div class="alert alert-danger" style="background-color: #d4edda; color: black;" role="alert">
+        @TempData["email"]
+    </div>
+}
 
 <div>
-    <p>Please enter your information:</p>
+    <h3>Please enter your information:</h3>
     <form method="post">
         <label for="Email">Mail:</label><br />
         <input type="text" name="Email" id="Email" required /><br />
         <label for="Password">Password:</label><br />
-        <input type="password" name="Password" id="Password" required /><br /><br />
-
-        <input type="submit" value="Submit" />
+        <input type="password" name="Password" id="Password" required /><br />
+        <a href="@Url.Action("Forgotpassword", "User")">Forgot password?</a><br /><br />
+        <input type="submit" value="LOGIN" />
     </form>
 
 </div>
