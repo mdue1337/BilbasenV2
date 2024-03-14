@@ -1,12 +1,17 @@
-﻿@model UserModel
+﻿@model InformationModel
 
 @{
     ViewData["Title"] = "Information";
 }
 
-<script defer>
-    sessionStorage.setItem("UserId", @Model.Id);
+@if (TempData["PasswordUpdate"] != null)
+{
+    <div class="alert alert-danger" style="background-color: #d4edda; color: black;" ; role="alert">
+        @TempData["PasswordUpdate"]
+    </div>
+}
 
+<script defer>
     document.addEventListener('submit', function (event) {
         if (!confirm("Do you want to update info?")) {
             event.preventDefault();
@@ -14,16 +19,96 @@
     });
 </script>
 
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
+
 <div>
-    <h1>Welcome @Model.Name</h1>
-    <p>This is your user info</p>
-    <form>
+    <h1>Welcome @Model.User.Name</h1>
+    <p>This is your user info, you can change your password with the box below.</p>
+    <p>
+    <form method="post">
         <label for="Name">Name:</label>
-        <input type="text" value="@Model.Name" id="Name"/><br />
+        <input type="text" value="@Model.User.Name" id="Name" readonly/><br /><br />
         <label for="Name">Email:</label>
-        <input type="email" value="@Model.Email" id="Email" /><br />
+        <input type="email" value="@Model.User.Email" id="Email" readonly/><br /><br />
         <label for="Name">Password:</label>
-        <input type="password" placeholder="password" id="Pw" />
+        <input type="password" name="pw" placeholder="password" id="Pw" />
         <button type="submit">Update</button>
-    </form>
+    </form><br />
+
+    <h2>Bought listings</h2>
+
+    @if (Model.BuyHistoryListings.Count == 0)
+    {
+        <p>You have bought no listings</p>
+    }
+    else
+    {
+        <table>
+            <tr>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Price</th>
+                <th>Year</th>
+                <th>Horsepower</th>
+            </tr>
+        @for(int i = 0; i < Model.BuyHistoryListings.Count; i++)
+        {
+            <tr>
+                <td>@Model.BuyHistoryListings[i].Brand</td>
+                <td>@Model.BuyHistoryListings[i].Model</td>
+                <td>@Model.BuyHistoryListings[i].Price</td>
+                <td>@Model.BuyHistoryListings[i].Year</td>
+                <td>@Model.BuyHistoryListings[i].Horsepower</td>
+            </tr>
+        }
+        </table>
+    }
+
+    <h2>Your listings:</h2>
+    
+    @if (Model.UserListings.Count == 0)
+    {
+        <p>You have no listings</p>
+    }
+    else
+    {
+        <table>
+            <tr>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Price</th>
+                <th>Year</th>
+                <th>Horsepower</th>
+            </tr>
+                @for (int i = 0; i < Model.UserListings.Count; i++)
+                {
+                <tr>
+                    <td>@Model.UserListings[i].Brand</td>
+                    <td>@Model.UserListings[i].Model</td>
+                    <td>@Model.UserListings[i].Price</td>
+                    <td>@Model.UserListings[i].Year</td>
+                    <td>@Model.UserListings[i].Horsepower</td>
+                </tr>
+                }
+        </table>
+    }
 </div>

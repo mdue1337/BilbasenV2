@@ -195,6 +195,13 @@ namespace MVCtest3d.Database
             {
                 cnn.Open();
 
+                int sellerId = GetSpecificListing(listingId).Id;
+
+                if(sellerId == userId)
+                {
+                    throw new InvalidOperationException();
+                }
+
                 using(IDbTransaction transaction = cnn.BeginTransaction())
                 {
                     try
@@ -212,6 +219,16 @@ namespace MVCtest3d.Database
                         transaction.Rollback();
                     }
                 }
+            }
+        }
+
+        public List<BuyHistory> getUserHistory(int userId)
+        {
+            using(IDbConnection cnn =  new SQLiteConnection(ConnectionString)) 
+            {
+                string sql = "SELECT Id, `User.Id` AS UserId, `Listing.Id` AS ListingId FROM BuyHistory WHERE `User.Id` = @Id";
+                List<BuyHistory> output = cnn.Query<BuyHistory>(sql, new { Id = userId }).ToList();
+                return output;
             }
         }
     }

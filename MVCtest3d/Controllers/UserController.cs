@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVCtest3d.Database;
 using MVCtest3d.Database.DatabaseModels;
+using MVCtest3d.Models;
 using MVCtest3d.Other;
 
 namespace MVCtest3d.Controllers
@@ -73,7 +74,23 @@ namespace MVCtest3d.Controllers
                     throw new();
                 }
                 UserModel _user = _db.GetUser(user.Id);
-                return View(_user);
+                List<ListingModel> userListings = _db.GetAllListing().OrderBy(x => x.UserId ==  user.Id).ToList();
+                List<BuyHistory> _buy = _db.getUserHistory(user.Id);
+                List<ListingModel> Buylistings = new();
+
+                for (int i = 0; i < _buy.Count; i++)
+                {
+                    ListingModel data = _db.GetSpecificListing(_buy[i].ListingId);
+                    Buylistings.Add(data);
+                }
+
+                InformationModel _info = new()
+                {
+                    User = _user,
+                    BuyHistoryListings = Buylistings,
+                    UserListings = userListings
+                };
+                return View(_info);
             }
             catch (Exception)
             {
@@ -83,9 +100,12 @@ namespace MVCtest3d.Controllers
         }
 
         [HttpPost]
-        public IActionResult Information() // take params and then do database stuff
+        public IActionResult Information(string pw) // take params and then do database stuff
         {
-            return View();
+            int id = (int)HttpContext.Session.GetInt32("UserId");
+            _db.UpdatePassword(pw, id);
+            TempData["PasswordUpdate"] = "Password was updated";
+            return RedirectToAction("Information", "User", new { Id = id });
         }
 
         [HttpGet]

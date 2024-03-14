@@ -138,9 +138,15 @@ namespace MVCtest3d.Controllers
                 TempData["BuySucess"] = "You succesfully bought this listing";
                 return RedirectToAction("Index", "Home");
             }
+            catch (InvalidOperationException)
+            {
+                TempData["ErrorMessage"] = "You cannot buy your own listing";
+                return RedirectToAction("Index", "Home");
+            }
             catch (Exception)
             {
-                return View(new { id = ListingId });
+                TempData["ErrorMessage"] = "Error buying listing";
+                return RedirectToAction("Index", "Home");
             }
         }
     }

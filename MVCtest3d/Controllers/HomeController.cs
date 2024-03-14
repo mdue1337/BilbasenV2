@@ -31,39 +31,9 @@ namespace MVCtest3d.Controllers
         }
 
         [HttpGet]
-        public IActionResult About()
+        public IActionResult Cars()
         {
             return View();
-        }
-
-        [HttpPost]
-        public IActionResult About(IFormFile myFile)
-        {
-            try
-            {
-                byte[] imageBytes;
-
-                using (var ms = new MemoryStream())
-                {
-                    myFile.CopyTo(ms);
-                    ms.Seek(0, SeekOrigin.Begin);
-
-                    using (var image = Image.Load(ms))
-                    {
-                        using (var outputStream = new MemoryStream())
-                        {
-                            image.Save(outputStream, new JpegEncoder());
-                            imageBytes = outputStream.ToArray();
-                        }
-                    }
-                }
-
-                return View(imageBytes);
-            }
-            catch (Exception)
-            {
-                return Redirect("Index");
-            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
