@@ -1,5 +1,221 @@
-﻿@model byte[]
+﻿@model List<ListingModel>
 
 @{
     ViewData["Title"] = "Cars";
 }
+
+<style>
+    .box {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        max-width: 200px;
+    }
+    .box:hover {
+        background-color: #f0f0f0;
+    }
+    .dropbtn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    
+  }
+
+  /* Dropdown button hover */
+  .dropbtn:hover, .dropbtn:focus {
+    background-color: #3e8e41;
+  }
+  
+  /* Søgefelt */
+  #myInput {
+    box-sizing: border-box;
+    background-image: url('searchicon.png');
+    background-position: 14px 12px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    padding: 14px 20px 12px 45px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    
+  }
+  
+  /* Søgefelt fokus */
+  #myInput:focus {outline: 3px solid #ddd;}
+  
+  /* Container <div> - til placering af dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f6f6f6;
+    min-width: 150px;
+    border: 1px solid #ddd;
+    z-index: 1;
+  }
+  
+  button{
+    padding: 12px;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+  .show {display:block;}
+</style>
+
+<script defer> 
+    function dropdownFilter() { document.getElementById("myDropdown").classList.toggle("show"); }
+
+    function dropdownSort() { document.getElementById("myDropdown2").classList.toggle("show"); }
+
+    function updateButton(btn, value, text) {
+        document.getElementById(btn).style = 'visibility: visible'
+        document.getElementById(btn).textContent = text + " " + value;
+
+        checkButtonsVisibility()
+    }
+
+    function checkButtonsVisibility() {
+        let maxPriceBtnVisible = document.getElementById('MaxPriceBtn').style.visibility === 'visible';
+        let minPriceBtnVisible = document.getElementById('MinPriceBtn').style.visibility === 'visible';
+        let maxYearBtnVisible = document.getElementById('MaxYearBtn').style.visibility === 'visible';
+        let minYearBtnVisible = document.getElementById('MinYearBtn').style.visibility === 'visible';
+        
+        if (maxPriceBtnVisible && minPriceBtnVisible && maxYearBtnVisible && minYearBtnVisible) {
+            document.getElementById('filterAllBtn').style.visibility = 'visible';
+        }
+    }
+
+    function sort(param, inputId) {
+        let form = document.createElement("form");
+        form.method = 'POST';
+        form.action = "/Home/Cars"; 
+        
+        let sortingMethod = document.createElement("input");
+        sortingMethod.type = "hidden";
+        sortingMethod.name = "sortingMethod";
+        sortingMethod.value = param;
+        form.appendChild(sortingMethod);
+
+        if (param >= 7) {
+            let search;
+
+            if (inputId == 'all') {
+                let rangeInputs = document.querySelectorAll('input[type="range"]');
+
+                let values = [];
+
+                rangeInputs.forEach(function (input) {
+                    values.push(input.value);
+                });
+
+                search = values.join(' ');
+            }
+            else {
+                search = document.getElementById(inputId).value;
+            }
+            
+            let searchParam = document.createElement("input");
+            searchParam.type = "hidden";
+            searchParam.name = "searchParam";
+            searchParam.value = search;
+            form.appendChild(searchParam);
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+ </script>
+
+<div>
+    <h4>To reset the search simply press the search button without anything in the searchbar or select a sort method</h4>
+    <p>The filter option can be used to filter the current listings on the screen</p>
+    <input type="text" placeholder="Brand or Model.." id="myInput"><button onclick="sort(7, 'myInput')">Search</button>
+    <div class="dropdown"> 
+        <button onclick="dropdownFilter()" id="dropbtn" class="dropbtn">Sort</button>
+        <div id="myDropdown" class="dropdown-content">
+          <button onclick="sort(this.id, null)" id="1">Price: Low-High</button>
+          <br>
+          <button onclick="sort(this.id, null)" id="2">Price: High-Low</button>
+          <br>
+          <button onclick="sort(this.id, null)" id="3">Year: Old-New</button>
+          <br>
+          <button onclick="sort(this.id, null)" id="4">Year: New-Old</button>
+          <br>
+          <button onclick="sort(this.id, null)" id="5">Brand: A-Z</button>
+          <br>
+          <button onclick="sort(this.id, null)" id="6">Model: A-Z</button>
+        </div>
+        <br />
+    </div>
+
+    @{
+        if(Model.Count != 0)
+        {
+        <div class="dropdown">
+                <div class="dropdown2"> 
+                    <button onclick="dropdownSort()" id="dropbtn" class="dropbtn">Filter</button>
+                        <div id="myDropdown2" class="dropdown-content">
+                            <label for="slider1">Max price: </label>
+                            <input type="range" min="@Model.Min(x => x.Price)" max="@Model.Max(x => x.Price)" id="slider1" oninput="updateButton('MaxPriceBtn', this.value, 'Search: ')"/>
+                            <button onclick="sort(8, 'slider1')" style="visibility: hidden" id="MaxPriceBtn"></button>
+
+                            <label for="slider2">Min price: </label>
+                            <input type="range" min="@Model.Min(x => x.Price)" max="@Model.Max(x => x.Price)" id="slider2" oninput="updateButton('MinPriceBtn', this.value, 'Search: ')"/>
+                            <button onclick="sort(9, 'slider2')" style="visibility: hidden" id="MinPriceBtn"></button>
+                    
+                            <label for="slider3">Max year: </label>
+                            <input type="range" min="@Model.Min(x => x.Year)" max="@Model.Max(x => x.Year)" id="slider3" oninput="updateButton('MaxYearBtn', this.value, 'Search: ')"/>
+                            <button onclick="sort(10, 'slider3')" style="visibility: hidden" id="MaxYearBtn"></button>
+                    
+                            <label for="slider4">Min year: </label>
+                            <input type="range" min="@Model.Min(x => x.Year)" max="@Model.Max(x => x.Year)" id="slider4" oninput="updateButton('MinYearBtn', this.value, 'Search: ')"/>
+                            <button onclick="sort(11, 'slider4')" style="visibility: hidden" id="MinYearBtn"></button>
+                            <br /><br />
+                            <button style="visibility:hidden" id="filterAllBtn" onclick="sort(12, 'all')">FILTER ALL</button>
+                        </div>
+                </div>
+        </div>  
+        }
+    }
+</div>
+
+<div class="row">
+    @if(Model.Count == 0)
+    {
+        <div>
+            <h1>There are currently no listings</h1>
+        </div>
+    }
+    @for (int i = 0; i < @Model.Count; i++)
+    {
+        int columnNumber = i % 3;
+        bool isFirstColumn = columnNumber == 0;
+        
+        if (isFirstColumn)
+        {
+            @:</div><div class="row">
+        }
+
+        <div class="col-md-4">
+            <a href="@Url.Action("ShowListing", "Shop", new { id = Model[i].Id })" class="box">
+                <div class="box">
+                    <p>Car: @Model[i].Brand @Model[i].Model</p>
+                    <p>Year: @Model[i].Year</p>
+                    <p>Price: @Model[i].Price</p>
+                </div>
+            </a>
+        </div>
+    }
+</div>

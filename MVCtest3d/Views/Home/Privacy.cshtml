@@ -1,14 +1,20 @@
-﻿@{
+﻿﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
+<div>
+    <label for="MessageSender">Sender</label>
+    <input id="MessageSender" type="text" />
+    <br /><br />
+    <label for="MessageInput">Message</label>
+    <input id="MessageInput" type="text" />
+    <br /><br />
+    <button type="submit" id="MessageSendButton">Send Message</button>
+</div>
 
-<label for="MessageSender"></label>
-<input id="MessageSender" type="text" /><br />
-<label for="MessageInput"></label>
-<input id="MessageInput" type="text" /><br />
-<button type="submit" id="MessageSendButton">Send Message</button>
-
-<ul id="messagesList"></ul>
+<div>
+    <br /><br />
+    <ul id="messagesList"></ul>
+</div>
 
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/chat.js"></script>

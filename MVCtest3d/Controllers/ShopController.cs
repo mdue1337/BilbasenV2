@@ -24,10 +24,15 @@ namespace MVCtest3d.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateListing(int Price, int Year, int Horsepower, string Brand, string Model, string Timestamp, int userId, string Location)
+        public IActionResult CreateListing(int Price, int Year, int Horsepower, string Brand, string Model, string Timestamp, string Location)
         {
             try
             {
+                if(HttpContext.Session.GetInt32("UserId") == 0)
+                {
+                    throw new Exception();
+                }
+
                 ListingModel model = new()
                 {
                     Price = Price,
@@ -36,18 +41,13 @@ namespace MVCtest3d.Controllers
                     Brand = Brand,
                     Model = Model,
                     Created = Timestamp,
-                    UserId = userId,
+                    UserId = (int)HttpContext.Session.GetInt32("UserId"),
                     Location = Location
                 };
 
-                if(userId == 0)
-                {
-                    throw new Exception();
-                }
+                int listingId = _db.CreateListing(model);
 
-                _db.CreateListing(model, userId);
-
-                return RedirectToAction("UpdateListing", "Shop", new {id = model.Id});
+                return RedirectToAction("UpdateListing", "Shop", new { Id = listingId });
             }
             catch (Exception)
             {
@@ -59,16 +59,29 @@ namespace MVCtest3d.Controllers
         [HttpGet]
         public IActionResult UpdateListing(ListingModel listing)
         {
-            listing = _db.GetSpecificListing(listing.Id);
-            List<PictureModel> pictures = _db.GetListingPictures(listing.Id);
-
-            UpdateListingModel info = new()
+            try
             {
-                ListingModel = listing,
-                PictureModel = pictures
-            };
+                listing = _db.GetSpecificListing(listing.Id);
 
-            return View(info);
+                if (listing.UserId != HttpContext.Session.GetInt32("UserId"))
+                {
+                    throw new Exception();
+                }
+
+                List<PictureModel> pictures = _db.GetListingPictures(listing.Id);
+
+                UpdateListingModel info = new()
+                {
+                    ListingModel = listing,
+                    PictureModel = pictures
+                };
+
+                return View(info);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
@@ -95,12 +108,12 @@ namespace MVCtest3d.Controllers
 
                 _db.InsertPicture(imageBytes, ListingId);
 
-                return RedirectToAction("UpdateListing", "Shop", new { id = ListingId });
+                return RedirectToAction("UpdateListing", "Shop", new { Id = ListingId });
             }
             catch (Exception)
             {
                 TempData["ErrorMessage"] = "Failed uploading picture, try again";
-                return RedirectToAction("UpdateListing", "Shop", new { id = ListingId });
+                return RedirectToAction("UpdateListing", "Shop", new { Id = ListingId });
             }
         }
 

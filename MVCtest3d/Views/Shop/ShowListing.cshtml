@@ -89,7 +89,13 @@
         <img src="@Model.GoogleMaps" alt="Google Map" width="400" height="400" />
     </div><br />
 
-    <div>
-        <button id="buyButton" onclick="buy()">Buy listing</button>
-    </div>
+    @{
+        if(Model.ListingModel.Status == true)
+        {
+            <div>
+                <button id="buyButton" onclick="buy()">Buy listing</button>
+            </div>
+        }
+
+    }
 </div>

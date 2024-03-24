@@ -5,6 +5,8 @@ using System.Data.SQLite;
 using System.Net;
 using System.Net.Mail;
 using MVCtest3d.Other;
+using System.Collections.Generic;
+using MVCtest3d.Hubs.Model;
 
 namespace MVCtest3d.Database
 {
@@ -38,6 +40,7 @@ namespace MVCtest3d.Database
         public void SendEmail(string recipientEmail, string verificationCode)
         {
             // https://learn.microsoft.com/en-us/answers/questions/1167393/send-email-form-gmail-account-using-c
+
             using (var client = new SmtpClient())
             {
                 client.Host = "smtp.gmail.com";
@@ -158,12 +161,17 @@ namespace MVCtest3d.Database
             }
         }
 
-        public void CreateListing(ListingModel model, int userId)
+        public int CreateListing(ListingModel model)
         {
             using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
                 string sql = "INSERT INTO Listing ('User.Id', Price, Year, Horsepower, Brand, Model, Created, Location, Status) VALUES (@User, @Price, @Year, @Horsepower, @Brand, @Model, @Created, @Location, @Status)";
-                cnn.Execute(sql, new { User = userId, Price = model.Price, Year = model.Year, Horsepower = model.Horsepower, Brand = model.Brand, Model = model.Model, Created = model.Created, Location = model.Location, Status = 1});
+                cnn.Execute(sql, new { User = model.UserId, Price = model.Price, Year = model.Year, Horsepower = model.Horsepower, Brand = model.Brand, Model = model.Model, Created = model.Created, Location = model.Location, Status = 1});
+
+                string getListingId = "SELECT Id FROM Listing ORDER BY Id DESC LIMIT 1;";
+                int ListingId = cnn.QueryFirst<int>(getListingId);
+
+                return ListingId;
             }
         }
 
@@ -171,7 +179,7 @@ namespace MVCtest3d.Database
         {
             using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
-                string sql = "SELECT * FROM Listing WHERE Listing.Id = @Id";
+                string sql = @"SELECT Id, ""User.Id"" AS UserId, Price, Year, Horsepower, Brand, Model, Created, Location, Status FROM Listing WHERE Listing.Id = @Id";
                 ListingModel l = cnn.QueryFirstOrDefault<ListingModel>(sql, new {Id = id}) ?? throw new Exception();
                 return l;
             }
@@ -262,6 +270,61 @@ namespace MVCtest3d.Database
                 string sql = "SELECT Id, `User.Id` AS UserId, `Listing.Id` AS ListingId FROM BuyHistory WHERE `User.Id` = @Id";
                 List<BuyHistory> output = cnn.Query<BuyHistory>(sql, new { Id = userId }).ToList();
                 return output;
+            }
+        }
+
+        public int ConnectChatRoomId(int userone, int usertwo)
+        {
+            using( IDbConnection cnn = new SQLiteConnection())
+            {
+                int RoomId;
+                string sql = "SELECT Id FROM ChatRoom WHERE (UseroneId = @userone OR UseroneId = @usertwo) OR (UsertwoId = @userone OR UsertwoId = @usertwo)";
+                int? ChatId = cnn.QueryFirstOrDefault<int>(sql, new { userone = userone, usertwo = usertwo});
+
+                if (ChatId == null)
+                {
+                    RoomId = CreateChatHub(userone, usertwo);
+                }
+                else
+                {
+                    RoomId = (int)ChatId;
+                }
+
+                return RoomId;
+            }
+        }
+
+        public int CreateChatHub(int userId, int recieverId)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = "INSERT INTO ChatRoom (User1, User2) VALUES (@User1, @User2)";
+                cnn.Execute(sql, new {User1 = userId, User2 = recieverId});
+
+                string sql2 = "SELECT Id FROM ChatRoom ORDER BY Id DESC LIMIT 1";
+                int RoomId = cnn.QueryFirstOrDefault<int>(sql2);
+
+                return RoomId;
+            }
+        }
+
+        public List<ChatMessageModel> GetChatMessage(int chatRoomId)
+        {
+            using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = "SELECT * FROM ChatMessage WHERE ChatRoomId = @Id";
+                List<ChatMessageModel> messages = cnn.Query<ChatMessageModel>(sql, new { Id = chatRoomId }).ToList();
+                return messages;
+            }
+        }
+
+        public void ChatSendMessage(int chatRoomId, int senderId, string message)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = "INSERT INTO ChatMessage (ChatRoomId, SenderId, Message, Timestamp) VALUES (@ChatId, @Id, @Message, @TP)";
+                DateTime date = DateTime.Now;
+                cnn.Execute(sql, new { ChatId = chatRoomId, Id = senderId, Message = message, TP = date });
             }
         }
     }
