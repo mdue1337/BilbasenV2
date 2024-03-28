@@ -124,8 +124,39 @@ namespace MVCtest3d.Controllers
         }
 
         [HttpGet]
+        public IActionResult DeleteListing(int listingId)
+        {
+            ListingModel listing = _db.GetSpecificListing(listingId);
+
+            if(listing.UserId != HttpContext.Session.GetInt32("UserId"))
+            {
+                TempData["ErrorMessage"] = "Cannot delete a listing you do not own";
+                return RedirectToAction("Index", "Home");
+            }
+            else if (listing.Status == false)
+            {
+                TempData["ErrorMessage"] = "Cannot delete a listing that has been sold";
+                return RedirectToAction("Index", "Home");
+            }
+
+            _db.DeleteListing(listing.Id);
+
+            TempData["BuySucess"] = "Listing was succesfully deleted";
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
         public IActionResult ShowListing(ListingModel listing)
         {
+            if (HttpContext.Session.GetInt32("UserId") == null)
+            {
+                ViewBag.UserStatus = false;
+            }
+            else
+            {
+                ViewBag.UserStatus = true;
+            }
+
             listing = _db.GetSpecificListing(listing.Id);
             List<PictureModel> pictures = _db.GetListingPictures(listing.Id);
             Uri maps = MapsCollector.GenerateMap(listing.Location);

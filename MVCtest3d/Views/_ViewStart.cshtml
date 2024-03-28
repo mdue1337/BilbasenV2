@@ -1,3 +1,30 @@
 ﻿@{
-    Layout = "_Layout";
+    string[] publicViews = { "Index.cshtml", "SignIn.cshtml", "SignUp.cshtml", "ForgotPassword.cshtml", "PasswordUpdate.cshtml" };
+    string[] privateViews = { "CreateListing.cshtml", "MessageSeller.cshtml", "UpdateListing.cshtml", "Information.cshtml"};
+    string[] conditionalViews = { "Cars.cshtml", "ShowListing.cshtml"};
+
+    string currentViewName = ViewContext.View.Path.Split(new[] { "/", "\\" }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+
+    if (conditionalViews.Contains(currentViewName))
+    {
+        if (ViewBag.UserStatus)
+        {
+            Layout = "~/Views/Layouts/PrivateLayout.cshtml";
+        }
+        else
+        {
+            Layout = "~/Views/Layouts/PublicLayout.cshtml";
+        }
+    }
+    else
+    {
+        if (publicViews.Contains(currentViewName))
+        {
+            Layout = "~/Views/Layouts/PublicLayout.cshtml";
+        }
+        else if (privateViews.Contains(currentViewName))
+        {
+            Layout = "~/Views/Layouts/PrivateLayout.cshtml";
+        }
+    }
 }

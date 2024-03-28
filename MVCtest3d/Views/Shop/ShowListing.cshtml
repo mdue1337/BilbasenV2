@@ -87,20 +87,24 @@
     <div id="googleMaps">
         <h2>Location</h2>
         <img src="@Model.GoogleMaps" alt="Google Map" width="400" height="400" />
-    </div><br />
+    </div><br /><br />
 
     @{
         if(Model.ListingModel.Status == true)
         {
             <div>
+                <h3>Buy listing?</h3>
                 <button id="buyButton" onclick="buy()">Buy listing</button>
             </div>
         }
 
     }
-
+    
+    <br /><br />
     <div>
         <h2>Message the sender</h2>
         <button><a href="@Url.Action("MessageSeller", "Shop", new { targetId = Model.ListingModel.UserId})" style="color: inherit; text-decoration: none;"> Start chat</a></button>
     </div>
 </div>
+
+        <br />

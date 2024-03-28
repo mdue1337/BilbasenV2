@@ -5,7 +5,6 @@ using System.Data.SQLite;
 using System.Net;
 using System.Net.Mail;
 using MVCtest3d.Other;
-using System.Collections.Generic;
 using MVCtest3d.Hubs.Model;
 
 namespace MVCtest3d.Database
@@ -252,6 +251,44 @@ namespace MVCtest3d.Database
 
                         string sql2 = "UPDATE Listing SET Status = 0 WHERE Id = @LId";
                         cnn.Execute(sql2, new { LId = listingId });
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                    }
+                }
+            }
+        }
+
+        public void DeleteListing(int listingId) 
+        {
+            using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                cnn.Open();
+
+                using (IDbTransaction transaction = cnn.BeginTransaction())
+                {
+                    try
+                    {
+                        // Find all picture ids for listing
+                        string sql1 = @"SELECT ""Picture.Id"" AS PictureId FROM ListingPicture WHERE ""Listing.Id"" = @Id";
+                        List<ListingPicture> ListingPictures = cnn.Query<ListingPicture>(sql1, new { Id = listingId }).ToList();
+                        
+                        // foreach delete picture
+                        foreach(var pic in ListingPictures)
+                        {
+                            string query = @"DELETE FROM ListingPicture WHERE ""Picture.Id"" = @Id";
+                            cnn.Execute(query, new { Id = pic.PictureId });
+
+                            query = @"DELETE FROM Picture WHERE Id = @Id";
+                            cnn.Execute(query, new {Id =  pic.PictureId });
+                        }
+
+                        // Delete the listing
+                        string sql2 = "DELETE FROM Listing WHERE Id = @Id";
+                        cnn.Execute(sql2, new { Id = listingId });
 
                         transaction.Commit();
                     }
