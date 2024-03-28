@@ -1,0 +1,107 @@
+﻿@model MessageSellerModel
+
+@{
+    ViewData["Title"] = "Message Seller";
+}
+
+<div id="messageCheck" class="alert alert-danger" style="visibility: hidden;" role="alert">
+    Please enter a message before sending
+</div>
+
+<style>
+    #messagesList {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    #messagesList li {
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+
+            #messagesList li.Other-guy {
+                text-align: right;
+            }
+
+            #messagesList li.You {
+                text-align: left;
+            }
+
+</style>
+
+<div>
+    <h2>Chat with user: @Model.TargetId</h2>
+    <p>You are chatting as user: @Model.ConnectionId</p>
+    <p>You can send a message using the textfield below</p>
+    <br />
+    <label for="MessageInput">Message</label>
+    <input id="MessageInput" type="text" />
+    <br /><br />
+    <button type="submit" id="MessageSendButton">Send Message</button>
+</div>
+
+<div>
+    <br /><br />
+    <ul id="messagesList"></ul>
+</div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script defer>
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chatHub")
+        .build();
+
+    let chatRoomId;
+    let CurrentConnectionId;
+
+    document.getElementById("MessageSendButton").disabled = true;
+
+    connection.on("ReceiveMessage", function (user, message) {
+        var sender = user != @Model.ConnectionId ? "Other-guy" : "You"; // something wrong here
+        var li = document.createElement("li");
+        li.innerHTML = `<b>${sender}</b> said: ${message}`;
+        li.classList.add(sender);
+        document.getElementById("messagesList").appendChild(li);
+    });
+
+    connection.start().then(function () {
+        document.getElementById("MessageSendButton").disabled = false;
+
+        // Get chatroom
+        connection.invoke("GetChatName", [@Model.TargetId, @Model.ConnectionId]).then(function (response) {
+            chatRoomId = response;
+            connection.invoke("JoinGroup", chatRoomId);
+            connection.invoke("GetChatHistory", chatRoomId);
+            CurrentConnectionId = connection.connectionId;
+        })
+            .catch(function (err) {
+                return console.error(err.toString());
+            });
+
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    document.getElementById("MessageSendButton").addEventListener("click", function (event) {
+        var user = @Model.ConnectionId;
+        var message = document.getElementById("MessageInput");
+        
+        if (message.value !== "") {
+            document.getElementById("messageCheck").style = "visibility: hidden;"
+
+            connection.invoke("SendMessage", String(chatRoomId), user, message.value)
+                .catch(function (err) {
+                    return console.error(err.toString());
+                });
+        }
+        else {
+            document.getElementById("messageCheck").style = "visibility: visibile;"
+        }
+        
+        message.value = "";
+
+        event.preventDefault();
+    });
+</script>

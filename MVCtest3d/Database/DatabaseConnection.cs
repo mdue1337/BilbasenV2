@@ -189,7 +189,7 @@ namespace MVCtest3d.Database
         {
             using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
-                string sql = "SELECT * FROM Listing";
+                string sql = @"SELECT Id, ""User.Id"" AS UserId, Price, Year, Horsepower, Brand, Model, Created, Location, Status FROM Listing";
                 List<ListingModel> l = cnn.Query<ListingModel>(sql).ToList();
                 return l;
             }
@@ -275,11 +275,11 @@ namespace MVCtest3d.Database
 
         public int ConnectChatRoomId(int userone, int usertwo)
         {
-            using( IDbConnection cnn = new SQLiteConnection())
+            using( IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
                 int RoomId;
-                string sql = "SELECT Id FROM ChatRoom WHERE (UseroneId = @userone OR UseroneId = @usertwo) OR (UsertwoId = @userone OR UsertwoId = @usertwo)";
-                int? ChatId = cnn.QueryFirstOrDefault<int>(sql, new { userone = userone, usertwo = usertwo});
+                string sql = "SELECT Id FROM ChatRoom WHERE (UseroneId = @userone OR UseroneId = @usertwo) AND (UsertwoId = @userone OR UsertwoId = @usertwo)";
+                int? ChatId = cnn.QueryFirstOrDefault<int?>(sql, new { userone = userone, usertwo = usertwo});
 
                 if (ChatId == null)
                 {
@@ -298,7 +298,7 @@ namespace MVCtest3d.Database
         {
             using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
-                string sql = "INSERT INTO ChatRoom (User1, User2) VALUES (@User1, @User2)";
+                string sql = "INSERT INTO ChatRoom (UseroneId, UsertwoId) VALUES (@User1, @User2)";
                 cnn.Execute(sql, new {User1 = userId, User2 = recieverId});
 
                 string sql2 = "SELECT Id FROM ChatRoom ORDER BY Id DESC LIMIT 1";
@@ -325,6 +325,16 @@ namespace MVCtest3d.Database
                 string sql = "INSERT INTO ChatMessage (ChatRoomId, SenderId, Message, Timestamp) VALUES (@ChatId, @Id, @Message, @TP)";
                 DateTime date = DateTime.Now;
                 cnn.Execute(sql, new { ChatId = chatRoomId, Id = senderId, Message = message, TP = date });
+            }
+        }
+
+        public List<ChatRoomModel> GetChats(int userId)
+        {
+            using( IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                string sql = "SELECT * FROM ChatRoom WHERE (UseroneId = @Id OR UsertwoId = @Id)";
+                List<ChatRoomModel> chats = cnn.Query<ChatRoomModel>(sql, new { Id = userId }).ToList();
+                return chats;
             }
         }
     }

@@ -28,6 +28,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/Layouts/PrivateLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xQcml2YXRlTGF5b3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/Layouts/PublicLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xQdWJsaWNMYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -38,6 +46,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/Shop/CreateListing.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hvcFxDcmVhdGVMaXN0aW5nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/Shop/MessageSeller.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hvcFxNZXNzYWdlU2VsbGVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/marti/OneDrive - TEC/3. G/Pro/Eksamensprojekt/github/BilbasenV2/MVCtest3d/Views/Shop/ShowListing.cshtml]

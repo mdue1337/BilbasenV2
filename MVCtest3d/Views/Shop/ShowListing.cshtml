@@ -98,4 +98,9 @@
         }
 
     }
+
+    <div>
+        <h2>Message the sender</h2>
+        <button><a href="@Url.Action("MessageSeller", "Shop", new { targetId = Model.ListingModel.UserId})" style="color: inherit; text-decoration: none;"> Start chat</a></button>
+    </div>
 </div>

@@ -70,7 +70,8 @@ namespace MVCtest3d.Controllers
                     {
                         break;
                     }
-                    listings = listings.Where(x => x.Brand == searchParam || x.Model == searchParam).ToList();
+                    // ligeglad om det er med lowercase / uppercase
+                    listings = listings.Where(x => x.Brand.Contains(searchParam, StringComparison.InvariantCultureIgnoreCase) || x.Brand.Contains(searchParam, StringComparison.InvariantCultureIgnoreCase)).ToList();
                     break;
                 case 8:
                     listings = listings.Where(x => x.Price <= int.Parse(searchParam)).ToList();

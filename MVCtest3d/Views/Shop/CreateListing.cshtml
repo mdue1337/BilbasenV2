@@ -21,10 +21,11 @@
     let cars;
     let selectedIndex;
 
-    async function getCars() {
+    let getCars = async () => {
         let response = await fetch("https://private-96862-carsapi1.apiary-mock.com/cars");
         let data = await response.json();
         cars = data
+        console.log(data)
         var brandInput = document.getElementById('brand').value;
         BrandSort(brandInput)
     }
@@ -48,6 +49,7 @@
 
         for (let i = 0; i < cars.length; i++) {
             let listItem = document.createElement("li");
+            let insideDiv = document.createElement("div");
 
             let rb = document.createElement("input");
             rb.type = "radio";
@@ -60,8 +62,10 @@
             labelrb.textContent = cars[i].model;
             labelrb.htmlFor = `car${i}`;
 
-            listItem.appendChild(rb);
-            listItem.appendChild(labelrb);
+            insideDiv.appendChild(rb);
+            insideDiv.appendChild(labelrb);
+           
+            listItem.appendChild(insideDiv);
             list.appendChild(listItem);
         }
 

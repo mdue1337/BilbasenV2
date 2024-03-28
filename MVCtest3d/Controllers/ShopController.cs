@@ -20,6 +20,11 @@ namespace MVCtest3d.Controllers
         [HttpGet]
         public IActionResult CreateListing() 
         {
+            if(HttpContext.Session.GetInt32("UserId") == null)
+            {
+                TempData["ErrorMessage"] = "You must be logged in to create a listing. Please sign in or up";
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -28,7 +33,7 @@ namespace MVCtest3d.Controllers
         {
             try
             {
-                if(HttpContext.Session.GetInt32("UserId") == 0)
+                if(HttpContext.Session.GetInt32("UserId") == null)
                 {
                     throw new Exception();
                 }
@@ -80,6 +85,7 @@ namespace MVCtest3d.Controllers
             }
             catch (Exception)
             {
+                TempData["ErrorMessage"] = "Cannot update a listing you do not own";
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -161,6 +167,26 @@ namespace MVCtest3d.Controllers
                 TempData["ErrorMessage"] = "Error buying listing";
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+        [HttpGet]
+        public IActionResult MessageSeller(int targetId)
+        {
+            int? connection = HttpContext.Session.GetInt32("UserId");
+
+            if (connection == null)
+            {
+                TempData["ErrorMessage"] = "You must be logged in to start a chat";
+                return RedirectToAction("Index", "Home");
+            }
+
+            MessageSellerModel model = new()
+            {
+                ConnectionId = (int)connection,
+                TargetId = targetId
+            };
+
+            return View(model);
         }
     }
 }

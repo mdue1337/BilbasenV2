@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVCtest3d.Database;
 using MVCtest3d.Database.DatabaseModels;
+using MVCtest3d.Hubs.Model;
 using MVCtest3d.Models;
 using MVCtest3d.Other;
 
@@ -73,8 +74,15 @@ namespace MVCtest3d.Controllers
                 {
                     throw new();
                 }
+
+                // Get user
                 UserModel _user = _db.GetUser(user.Id);
-                List<ListingModel> userListings = _db.GetAllListing().OrderBy(x => x.UserId ==  user.Id).ToList();
+
+                // Get users listings
+                List<ListingModel> userListings = _db.GetAllListing();
+                userListings = userListings.Where(x => x.UserId == user.Id).ToList();
+
+                // Get all user bought listings
                 List<BuyHistory> _buy = _db.getUserHistory(user.Id);
                 List<ListingModel> Buylistings = new();
 
@@ -84,11 +92,15 @@ namespace MVCtest3d.Controllers
                     Buylistings.Add(data);
                 }
 
+                // Get chats for user
+                List<ChatRoomModel> chats = _db.GetChats(user.Id);
+
                 InformationModel _info = new()
                 {
                     User = _user,
                     BuyHistoryListings = Buylistings,
-                    UserListings = userListings
+                    UserListings = userListings,
+                    Chats = chats
                 };
                 return View(_info);
             }

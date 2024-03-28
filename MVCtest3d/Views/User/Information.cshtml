@@ -115,4 +115,27 @@
                 }
         </table>
     }
+
+    <div>
+        <h2>Your chats</h2>
+                
+            @if (Model.Chats.Count == 0)
+            {
+            <p> You have no chats </p>
+            }
+            else
+            {
+                @for (int i = 0; i < Model.Chats.Count; i++)
+                {
+                    if (Model.User.Id == Model.Chats[i].UseroneId)
+                    {
+                    <button onclick="window.location.href='@Url.Action("MessageSeller", "Shop", new { targetId = Model.Chats[i].UsertwoId })'">Chat with user: @Model.Chats[i].UseroneId</button><br />
+                    }
+                    else
+                    {
+                    <button onclick="window.location.href='@Url.Action("MessageSeller", "Shop", new { targetId = Model.Chats[i].UseroneId })'">Chat with user: @Model.Chats[i].UsertwoId</button><br />
+                    }
+                }
+            }
+    </div>
 </div>
