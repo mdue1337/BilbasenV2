@@ -21,6 +21,15 @@ namespace MVCtest3d.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetInt32("UserId") == null)
+            {
+                ViewBag.UserStatus = false;
+            }
+            else
+            {
+                ViewBag.UserStatus = true;
+            }
+
             List<ListingModel> listings = _db.GetAllListing();
             listings = listings.Where(x => x.Status == true).ToList();
             return View(listings);

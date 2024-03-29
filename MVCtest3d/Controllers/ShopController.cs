@@ -141,7 +141,7 @@ namespace MVCtest3d.Controllers
 
             _db.DeleteListing(listing.Id);
 
-            TempData["BuySucess"] = "Listing was succesfully deleted";
+            TempData["Deletelisting"] = "Listing was succesfully deleted";
             return RedirectToAction("Index", "Home");
         }
 

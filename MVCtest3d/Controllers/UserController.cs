@@ -16,6 +16,22 @@ namespace MVCtest3d.Controllers
         }
 
         [HttpGet]
+        public IActionResult LogOut()
+        {
+            if(HttpContext.Session.GetInt32("UserId") != null)
+            {
+                HttpContext.Session.Remove("UserId");
+                TempData["LogOut"] = "Succesfully logged out";
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Can not logout because you are not logged in";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        [HttpGet]
         public IActionResult SignUp()
         {
             return View();

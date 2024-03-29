@@ -1,7 +1,7 @@
 ﻿@{
-    string[] publicViews = { "Index.cshtml", "SignIn.cshtml", "SignUp.cshtml", "ForgotPassword.cshtml", "PasswordUpdate.cshtml" };
+    string[] publicViews = { "SignIn.cshtml", "SignUp.cshtml", "ForgotPassword.cshtml", "PasswordUpdate.cshtml" };
     string[] privateViews = { "CreateListing.cshtml", "MessageSeller.cshtml", "UpdateListing.cshtml", "Information.cshtml"};
-    string[] conditionalViews = { "Cars.cshtml", "ShowListing.cshtml"};
+    string[] conditionalViews = { "Cars.cshtml", "ShowListing.cshtml", "Index.cshtml"};
 
     string currentViewName = ViewContext.View.Path.Split(new[] { "/", "\\" }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
 
