@@ -2,10 +2,7 @@
 using MVCtest3d.Database;
 using MVCtest3d.Models;
 using System.Diagnostics;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp;
 using MVCtest3d.Database.DatabaseModels;
-using Microsoft.Net.Http.Headers;
 
 namespace MVCtest3d.Controllers
 {
@@ -60,6 +57,15 @@ namespace MVCtest3d.Controllers
         [HttpPost]
         public IActionResult Cars(int sortingMethod, string searchParam)
         {
+            if (HttpContext.Session.GetInt32("UserId") == null)
+            {
+                ViewBag.UserStatus = false;
+            }
+            else
+            {
+                ViewBag.UserStatus = true;
+            }
+
             List<ListingModel> listings = _db.GetAllListing();
             listings = listings.Where(x => x.Status == true).ToList();
 
