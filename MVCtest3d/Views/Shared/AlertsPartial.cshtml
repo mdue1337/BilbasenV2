@@ -1,0 +1,22 @@
+﻿@{
+    var messages = new List<(string Key, string CssClass)>
+    {
+        ("ErrorMessage", "alert-danger"),
+        ("LoginConfirmation", "alert-success"),
+        ("Deletelisting", "alert-success"),
+        ("BuySucess", "alert-success"),
+        ("LogOut", "alert-success"),
+        ("PasswordUpdate", "alert-success"),
+        ("Email", "alert-success")
+    };
+
+    foreach (var (key, cssClass) in messages)
+    {
+        if (TempData[key] != null)
+        {
+            <div class="alert @cssClass" role="alert">
+                @TempData[key]
+            </div>
+        }
+    }
+}

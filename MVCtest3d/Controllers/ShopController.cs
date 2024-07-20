@@ -17,10 +17,21 @@ namespace MVCtest3d.Controllers
             _db = db;
         }
 
-        [HttpGet]
-        public IActionResult CreateListing() 
+        public bool CheckUserLoggedIn()
         {
-            if(HttpContext.Session.GetInt32("UserId") == null)
+            return HttpContext.Session.GetInt32("UserId") != null;
+        }
+
+        public bool CheckIfUserHasCredentials(int CompareId)
+        {
+            int? loggedInUserId = HttpContext.Session.GetInt32("UserId");
+            return loggedInUserId == CompareId;
+        }
+
+        [HttpGet]
+        public IActionResult CreateListing()
+        {
+            if (HttpContext.Session.GetInt32("UserId") == null)
             {
                 TempData["ErrorMessage"] = "You must be logged in to create a listing. Please sign in or up";
                 return RedirectToAction("Index", "Home");
@@ -29,11 +40,11 @@ namespace MVCtest3d.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateListing(int Price, int Year, int Horsepower, string Brand, string Model, string Timestamp, string Location)
+        public IActionResult CreateListing(int Price, int Year, int Horsepower, string Brand, string Model, string Timestamp, string Location, string Description)
         {
             try
             {
-                if(HttpContext.Session.GetInt32("UserId") == null)
+                if (CheckUserLoggedIn() == false)
                 {
                     throw new Exception();
                 }
@@ -47,7 +58,8 @@ namespace MVCtest3d.Controllers
                     Model = Model,
                     Created = Timestamp,
                     UserId = (int)HttpContext.Session.GetInt32("UserId"),
-                    Location = Location
+                    Location = Location,
+                    Description = Description
                 };
 
                 int listingId = _db.CreateListing(model);
@@ -68,7 +80,7 @@ namespace MVCtest3d.Controllers
             {
                 listing = _db.GetSpecificListing(listing.Id);
 
-                if (listing.UserId != HttpContext.Session.GetInt32("UserId"))
+                if (CheckIfUserHasCredentials(listing.UserId) == false)
                 {
                     throw new Exception();
                 }
@@ -93,6 +105,9 @@ namespace MVCtest3d.Controllers
         [HttpPost]
         public IActionResult UpdateListing(IFormFile myFile, int ListingId)
         {
+
+            // Security: Check if the user doing the request should be able to. Compare listing.sellerId to HttpContext.Id
+
             try
             {
                 byte[] imageBytes;
@@ -123,12 +138,30 @@ namespace MVCtest3d.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult ChangeListingInfo(int? Price, string? Description, int ListingId)
+        {
+            // Security needs to be implemnted
+
+            _db.UpdateListingInfo(Price, Description, ListingId);
+            return RedirectToAction("UpdateListing", "Shop", new { Id = ListingId });
+        }
+
+        [HttpPost]
+        public IActionResult DeletePicture(int Pictureid, int ListingId)
+        {
+            // Security needs to be implemnted
+
+            _db.DeletePicture(Pictureid);
+            return RedirectToAction("UpdateListing", "Shop", new { id = ListingId });
+        }
+
         [HttpGet]
         public IActionResult DeleteListing(int listingId)
         {
             ListingModel listing = _db.GetSpecificListing(listingId);
 
-            if(listing.UserId != HttpContext.Session.GetInt32("UserId"))
+            if (listing.UserId != HttpContext.Session.GetInt32("UserId"))
             {
                 TempData["ErrorMessage"] = "Cannot delete a listing you do not own";
                 return RedirectToAction("Index", "Home");
@@ -150,6 +183,7 @@ namespace MVCtest3d.Controllers
         {
             if (HttpContext.Session.GetInt32("UserId") == null)
             {
+
                 ViewBag.UserStatus = false;
             }
             else
@@ -172,11 +206,11 @@ namespace MVCtest3d.Controllers
         }
 
         [HttpPost]
-        public IActionResult ShowListing(int ListingId)
+        public IActionResult ShowListing(int ListingId) // Buy listing
         {
             int? BuyerId = HttpContext.Session.GetInt32("UserId");
 
-            if(BuyerId == null)
+            if (BuyerId == null)
             {
                 TempData["ErrorMessage"] = "You must be logged in to buy a product";
                 return RedirectToAction("Index", "Home");

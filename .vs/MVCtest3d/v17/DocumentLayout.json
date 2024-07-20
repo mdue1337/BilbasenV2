@@ -1,0 +1,53 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\marti\\OneDrive\\2024 code\\Bilbasen V2\\BilbasenV2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F256F51E-0538-4217-B19A-925A169DE69E}|MVCtest3d\\MVCtest3d.csproj|c:\\users\\marti\\onedrive\\2024 code\\bilbasen v2\\bilbasenv2\\mvctest3d\\other\\todo.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{F256F51E-0538-4217-B19A-925A169DE69E}|MVCtest3d\\MVCtest3d.csproj|solutionrelative:mvctest3d\\other\\todo.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:55:0:{dcc4ea97-1c0c-482b-b205-e541c0df9728}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:58:0:{dcc4ea97-1c0c-482b-b205-e541c0df9728}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:61:0:{dcc4ea97-1c0c-482b-b205-e541c0df9728}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{dcc4ea97-1c0c-482b-b205-e541c0df9728}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ToDo.txt",
+              "DocumentMoniker": "C:\\Users\\marti\\OneDrive\\2024 code\\Bilbasen V2\\BilbasenV2\\MVCtest3d\\Other\\ToDo.txt",
+              "RelativeDocumentMoniker": "MVCtest3d\\Other\\ToDo.txt",
+              "ToolTip": "C:\\Users\\marti\\OneDrive\\2024 code\\Bilbasen V2\\BilbasenV2\\MVCtest3d\\Other\\ToDo.txt",
+              "RelativeToolTip": "MVCtest3d\\Other\\ToDo.txt",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-07-20T19:25:23.649Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

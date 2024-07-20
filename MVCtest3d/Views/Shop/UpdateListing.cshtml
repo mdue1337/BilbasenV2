@@ -4,14 +4,12 @@
     ViewData["Title"] = "Update Listing";
 }
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
 <style>
+    .no {
+        color: #FFFFFF;
+        text-decoration: none;
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
@@ -22,15 +20,57 @@
         padding: 8px;
         text-align: left;
     }
+
+    .picture-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .delete-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        display: none;
+    }
+
+    .picture-wrapper:hover .delete-button {
+        display: block;
+    }
 </style>
 
 <script defer>
-    
+    function validateForm() {
+        let price = document.forms["change"]["Price"].value;
+        let description = document.forms["change"]["Description"].value;
+
+        if (price === "" && description === "") {
+            alert("Please fill out at least one field.");
+            return false;
+        }
+
+        return true;
+    }
+
+    function handleDelete() {
+        if (confirmDelete()) {
+            // If user confirms deletion, proceed to delete action
+            window.location.href = '@Url.Action("DeleteListing", "Shop", new { listingId = Model.ListingModel.Id })';
+        }
+    }
+
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this?');
+    }
 </script>
 
 <div>
     <h1>Information about @Model.ListingModel.Brand @Model.ListingModel.Model</h1>
-    <p>Unfortunately you cannot change any information about your listing.</p>
     <table>
         <tr>
             <th>Price</th>
@@ -38,6 +78,7 @@
             <th>Year</th>
             <th>Created</th>
             <th>Location</th>
+            <th>Description</th>
         </tr>
         <tr>
             <td>@Model.ListingModel.Price</td>
@@ -45,33 +86,61 @@
             <td>@Model.ListingModel.Year</td>
             <td>@Model.ListingModel.Created</td>
             <td>@Model.ListingModel.Location</td>
+            <td>@Model.ListingModel.Description</td>
         </tr>
     </table>
 
+    @{
+        if (Model.ListingModel.Status is not false)
+        {
+            <h2>Change current information</h2>
+            <form name="change" action="@Url.Action("ChangeListingInfo", "Shop")" method="POST" onsubmit="return validateForm()">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="ListingId" value="@Model.ListingModel.Id" />
+                <label>New price:</label>
+                <input name="Price" type="number" min="1" /><br /><br />
+                <label>New description:</label>
+                <input name="Description" type="text" maxlength="256" /><br /><br />
+                <button type="submit"> Send </button>
+            </form>
+        }
+    }
+
     <h2>Pictures</h2>
-    <p> However you can add pictures :) </p>
-    <br />
     <div id="CarPictures">
         @for (int i = 0; i < Model.PictureModel.Count; i++)
         {
             var base64String = Convert.ToBase64String(Model.PictureModel[i].Data);
-            <img id="picture{@i}" src="data:image/jpeg;base64,@base64String" />
+            var deleteUrl = Url.Action("DeletePicture", "Shop");
+
+            <div class="picture-wrapper">
+                <img id="picture{@i}" src="data:image/jpeg;base64,@base64String" />
+                <form action="@deleteUrl" method="post" style="display:inline;" onsubmit="return confirmDelete()">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="PictureId" value="@Model.PictureModel[i].Id" />
+                    <input type="hidden" name="ListingId" value="@Model.ListingModel.Id" />
+                    <button type="submit" class="delete-button">Delete?</button>
+                </form>
+            </div>
         }
     </div>
 
     <form method="post" enctype="multipart/form-data">
         <label for="myFile">Upload a JPEG picture</label>
-        <input type="file" id="myFile" name="myFile" accept="image/jpeg" required/>
-        <input type="hidden" name="ListingId" value="@Model.ListingModel.Id"/>
+        <input type="file" id="myFile" name="myFile" accept="image/jpeg" required />
+        <input type="hidden" name="ListingId" value="@Model.ListingModel.Id" />
         <input type="submit" />
     </form>
 
     <br /><br />
 
-    <div>
-        <h4>Delete your listing</h4>
-        <p>If you listing hasn't sold yet you can delete it</p>
-        <h3>!!THIS ACTION CANNOT BE UNDONE!!!</h3>
-        <button><a href="@Url.Action("DeleteListing", "Shop", new { listingId = Model.ListingModel.Id })">Delete listing</a></button>
-    </div>
+    @{
+        if (Model.ListingModel.Status is not false)
+        {
+            <div>
+                <h4>Delete your listing</h4>
+                <button onclick="handleDelete()"> Delete listing</button>
+            </div>
+        }
+    }
 </div>

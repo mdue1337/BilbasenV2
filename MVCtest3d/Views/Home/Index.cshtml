@@ -4,37 +4,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-@if (TempData["LoginConfirmation"] != null)
-{
-    <div class="alert alert-danger" style="background-color: #d4edda; color: black;" role="alert">
-        @TempData["LoginConfirmation"]
-    </div>
-}
-else if (TempData["Deletelisting"] != null)
-{
-    <div class="alert alert-danger" style="background-color: #d4edda; color: black;" role="alert">
-        @TempData["Deletelisting"]
-    </div>
-}
-else if (TempData["BuySucess"] != null)
-{
-    <div class="alert alert-danger" style="background-color: #d4edda; color: black;" role="alert">
-        @TempData["BuySucess"]
-    </div>
-}
-else if (TempData["LogOut"] != null)
-{
-    <div class="alert alert-danger" style="background-color: #d4edda; color: black;" role="alert">
-        @TempData["LogOut"]
-    </div>
-}
-else if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
 <style>
     .box {
         border: 1px solid #ccc;

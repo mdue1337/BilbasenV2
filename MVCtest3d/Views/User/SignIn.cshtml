@@ -3,19 +3,6 @@
     // Gem data i LocalStorage
 }
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @TempData["ErrorMessage"]
-    </div>
-}
-else if (TempData["email"] != null)
-{
-    <div class="alert alert-danger" style="background-color: #d4edda; color: black;" role="alert">
-        @TempData["email"]
-    </div>
-}
-
 <div>
     <h3>Please enter your information:</h3>
     <form method="post">

@@ -174,11 +174,27 @@ namespace MVCtest3d.Database
             }
         }
 
+        public void UpdateListingInfo(int? Price, string? Description, int ListingId)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                bool prev = false;
+                string sql = "UPDATE Listing SET";
+                if (Price is not null) { sql += " Price = @Price"; prev = true; }
+
+                if (Description is not null && prev) { sql += ", Description = @Description"; }
+                else if (Description is not null) { sql += " Description = @Description"; }
+
+                sql += " WHERE Id = @Id";
+                cnn.Execute(sql, new { Price = Price, Description = Description, Id = ListingId });
+            }
+        }
+
         public ListingModel GetSpecificListing(int id)
         {
             using(IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
-                string sql = @"SELECT Id, ""User.Id"" AS UserId, Price, Year, Horsepower, Brand, Model, Created, Location, Status FROM Listing WHERE Listing.Id = @Id";
+                string sql = @"SELECT *, ""User.Id"" AS UserId FROM Listing WHERE Listing.Id = @Id";
                 ListingModel l = cnn.QueryFirstOrDefault<ListingModel>(sql, new {Id = id}) ?? throw new Exception();
                 return l;
             }
@@ -188,7 +204,7 @@ namespace MVCtest3d.Database
         {
             using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
             {
-                string sql = @"SELECT Id, ""User.Id"" AS UserId, Price, Year, Horsepower, Brand, Model, Created, Location, Status FROM Listing";
+                string sql = @"SELECT *, ""User.Id"" AS UserId FROM Listing";
                 List<ListingModel> l = cnn.Query<ListingModel>(sql).ToList();
                 return l;
             }
@@ -204,7 +220,7 @@ namespace MVCtest3d.Database
                 {
                     try
                     {
-                        string sql1 = "INSERT INTO Picture (data) VALUES (@Data);  SELECT last_insert_rowid()";
+                        string sql1 = "INSERT INTO Picture (data) VALUES (@Data); SELECT last_insert_rowid()";
                         int PictureId = cnn.ExecuteScalar<int>(sql1, new { Data = img });
                         string sql2 = "INSERT INTO ListingPicture ('Listing.Id', 'Picture.Id') VALUES (@ListingId, @PictureId);";
                         cnn.Execute(sql2, new { ListingId = listingId, PictureId = PictureId });
@@ -216,6 +232,20 @@ namespace MVCtest3d.Database
                         transaction.Rollback();
                     }
                 }
+            }
+        }
+
+        public void DeletePicture(int pictureId)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(ConnectionString))
+            {
+                // Delete from listingPicture first
+                string sql1 = @"DELETE FROM ListingPicture WHERE ""Picture.Id"" = @Id";
+                cnn.Execute(sql1, new { Id = pictureId });
+
+                // Delete from pictures
+                string sql2 = "DELETE FROM Picture WHERE Id = @Id";
+                cnn.Execute(sql2, new { Id = pictureId });
             }
         }
 
@@ -231,7 +261,7 @@ namespace MVCtest3d.Database
 
         public void PurchaseListing(int listingId, int userId)
         {
-            int sellerId = GetSpecificListing(listingId).Id;
+            int sellerId = GetSpecificListing(listingId).UserId;
 
             if (sellerId == userId)
             {

@@ -12,5 +12,6 @@
         public string Created {  get; set; }
         public string Location { get; set; }
         public bool Status { get; set; }
+        public string? Description { get; set; }
     }
 }

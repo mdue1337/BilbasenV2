@@ -4,13 +4,6 @@
     ViewData["Title"] = "Information";
 }
 
-@if (TempData["PasswordUpdate"] != null)
-{
-    <div class="alert alert-danger" style="background-color: #d4edda; color: black;" ; role="alert">
-        @TempData["PasswordUpdate"]
-    </div>
-}
-
 <script defer>
     document.addEventListener('submit', function (event) {
         if (!confirm("Do you want to update info?")) {

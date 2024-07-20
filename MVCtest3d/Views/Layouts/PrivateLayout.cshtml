@@ -42,6 +42,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @await Html.PartialAsync("AlertsPartial")
             @RenderBody()
         </main>
     </div>

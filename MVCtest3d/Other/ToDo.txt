@@ -1,3 +1,21 @@
-﻿3. delete listing and picture
+﻿User interface skal forbedres
+	Lav en god måde at gemme billeder og vise dem
+	Mulighed for at ændre prisen + tilføje en description
 
-4. 
+Forbedre chatsystem, eventuelt inkluder at man kan se hvilken listing der skrives om.
+	Visuelt skal det bedre
+	Vis hvem man faktisk skriver med (vis brugeren's navn)
+
+Ekstra funktionalitet:
+
+1- Ønskeliste
+2- "Payment System"
+3- Fejlhåndtering
+
+4- Sikkerhed
+	a Controller håndtering af forskellige ting
+	b Håndtere at man ikke kan lave en request ved at have ændret form data:
+		b.a Skjul nuværende ListingId osv bedre, kan det gemmes i HTTP headeren?
+		b.b Anti-forgery tokens.
+
+5- kodeoptimering :):)
