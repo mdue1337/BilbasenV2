@@ -7,9 +7,9 @@ The system allows users to register, authenticate, and manage vehicle listings w
 
 ## 🧩 Tech Stack
 
-- **Backend:** ASP.NET MVC (C#), Entity Framework Core (Code-First)  
-- **Frontend:** Razor Views, HTML5, CSS3, JavaScript (Vanilla / jQuery)  
-- **Database:** Microsoft SQL Server  
+- **Backend:** ASP.NET MVC (C#)
+- **Frontend:** Razor Views, HTML, JavaScript (Vanilla / jQuery)  
+- **Database:** SQLite database  
 - **Architecture:** MVC pattern with layered separation (Controllers → Services → Repositories → Data Context)  
 - **ORM:** Entity Framework Core with LINQ and data annotations  
 - **Authentication:** ASP.NET Identity (role-based access control)  
